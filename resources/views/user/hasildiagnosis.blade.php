@@ -38,13 +38,12 @@
     $prePct  = $prestasi       > 0 ? round($prestasi    / 15 * 100) : 0;
 
     // Level risiko
-    if ($total >= 70)      { $risikoLabel = 'RISIKO TINGGI'; $risikoClass = 'badge-risiko-tinggi'; }
-    elseif ($total >= 40)  { $risikoLabel = 'RISIKO SEDANG'; $risikoClass = 'badge-risiko-sedang'; }
+    if ($total >= 35)      { $risikoLabel = 'RISIKO TINGGI'; $risikoClass = 'badge-risiko-tinggi'; }
+    elseif ($total >= 20)  { $risikoLabel = 'RISIKO SEDANG'; $risikoClass = 'badge-risiko-sedang'; }
     else                   { $risikoLabel = 'RISIKO RENDAH'; $risikoClass = 'badge-risiko-rendah'; }
 
-    // Certainty Factor sederhana (0–1 scale)
-    $cf = round($total / 100, 2);
-    $cfPct = $total;
+    $cf    = round($total / 50, 2);         // max 50, bukan 100
+    $cfPct = round($total / 50 * 100);      // persentase yang benar
 
     // Nama user
     $namaUser = Auth::user()->name ?? 'Pengguna';
@@ -448,7 +447,7 @@
                         @php
                             $r   = 38; $cx = 45; $cy = 45;
                             $circ = 2 * pi() * $r;
-                            $offset = $circ - ($total / 100) * $circ;
+                            $offset = $circ - ($cfPct / 100) * $circ;
                         @endphp
                         <svg viewBox="0 0 90 90" width="90" height="90">
                             <circle class="ring-bg"   cx="{{ $cx }}" cy="{{ $cy }}" r="{{ $r }}"/>
@@ -457,7 +456,7 @@
                                 stroke-dashoffset="{{ $offset }}"/>
                         </svg>
                         <div class="center-text">
-                            <span class="num">{{ $total }}</span>
+                            <span class="num">{{ $cfPct }}</span>
                             <span class="den">/100</span>
                         </div>
                     </div>
