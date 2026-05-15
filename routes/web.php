@@ -34,6 +34,9 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middl
 Route::middleware(['auth'])->group(function () {
 
     // Dashboard
+    Route::get('/dashboard-first', function () {
+        return view('dashboard.first-dashboard');
+    })->name('dashboard');
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // Diagnosis
