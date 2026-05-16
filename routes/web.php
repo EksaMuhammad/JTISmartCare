@@ -57,11 +57,20 @@ Route::middleware(['auth'])->group(function () {
 
     // Knowledge Base
     Route::get('/knowledge', [KnowledgeController::class, 'index'])->name('knowledge.index');
-
+    
     // Artikel
     Route::prefix('articles')->name('articles.')->group(function () {
         Route::get('/', [ArticleController::class, 'index'])->name('index');
         Route::get('/{slug}', [ArticleController::class, 'show'])->name('show');
     });
 
+    // ===== ADMIN ARTICLE =====
+    Route::prefix('admin')->name('admin.')->group(function () {
+
+        Route::get('/articles', [ArticleController::class, 'index'])
+            ->name('articles');
+        
+        Route::post('/articles/store', [ArticleController::class, 'store']
+            )->name('articles.store');
+    });
 });

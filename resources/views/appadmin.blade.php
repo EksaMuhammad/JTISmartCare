@@ -317,7 +317,8 @@
 
     {{-- ARTIKEL --}}
     <div class="nav-item">
-        <a href="#">
+        <a href="{{ route('admin.articles') }}"
+            class="{{ request()->routeIs('admin.articles') ? 'active' : '' }}">
 
             <i class="bi bi-file-earmark-text"></i>
             Kelola Artikel
