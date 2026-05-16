@@ -7,6 +7,7 @@ use App\Http\Controllers\DiagnosisController;
 use App\Http\Controllers\HistoryController;
 use App\Http\Controllers\KnowledgeController;
 use App\Http\Controllers\ArticleController;
+use App\Http\Controllers\MonitoringController;
 
 Route::get('/', function () {
     return redirect()->route('landing');
@@ -39,9 +40,8 @@ Route::middleware(['auth'])->group(function () {
     })->name('dashboard');
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    Route::get('/admin/dashboard', function () {
-        return view('admin.dashboard');
-    })->name('admin.dashboard');
+    Route::get('/admin/dashboard', [DashboardController::class, 'admin'])
+        ->name('admin.dashboard');
 
     // Diagnosis
     Route::prefix('diagnosis')->name('diagnosis.')->group(function () {
@@ -72,5 +72,8 @@ Route::middleware(['auth'])->group(function () {
         
         Route::post('/articles/store', [ArticleController::class, 'store']
             )->name('articles.store');
+        
+        Route::get('/monitoring', [MonitoringController::class, 'index'])
+            ->name('monitoring');
     });
 });

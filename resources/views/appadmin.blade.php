@@ -299,7 +299,8 @@
 
     {{-- MONITORING --}}
     <div class="nav-item">
-        <a href="#">
+        <a href="{{ route('admin.monitoring') }}"
+        class="{{ request()->routeIs('admin.monitoring') ? 'active' : '' }}">
 
             <i class="bi bi-graph-up-arrow"></i>
             Monitoring & Laporan
