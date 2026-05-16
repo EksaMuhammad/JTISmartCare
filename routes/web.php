@@ -39,6 +39,10 @@ Route::middleware(['auth'])->group(function () {
     })->name('dashboard');
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
+    Route::get('/admin/dashboard', function () {
+        return view('admin.dashboard');
+    })->name('admin.dashboard');
+
     // Diagnosis
     Route::prefix('diagnosis')->name('diagnosis.')->group(function () {
         Route::get('/form', [DiagnosisController::class, 'form'])->name('form');
