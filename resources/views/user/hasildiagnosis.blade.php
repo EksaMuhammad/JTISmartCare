@@ -3,47 +3,90 @@
 @section('content')
 
 @php
-    // Nama variabel per dimensi
     $namaVariabel = [
-        // Kelelahan (Kel) - 4 item
-        0  => ['label' => 'Beban Tugas Kuliah',       'dim' => 'Kel'],
-        1  => ['label' => 'Kualitas dan Kuantitas Tidur','dim' => 'Kel'],
-        2  => ['label' => 'Motivasi Belajar',          'dim' => 'Kel'],
-        3  => ['label' => 'Dukungan Sosial',           'dim' => 'Kel'],
-        // Depersonalisasi (Dep) - 3 item
-        4  => ['label' => 'Kondisi Fisik dan Kesehatan','dim' => 'Dep'],
-        5  => ['label' => 'Tekanan Keuangan',          'dim' => 'Dep'],
-        6  => ['label' => 'Kestabilan Emosi',          'dim' => 'Dep'],
-        // Prestasi (Pre) - 3 item
-        7  => ['label' => 'Kapasitas Prestasi Akademik','dim' => 'Pre'],
-        8  => ['label' => 'Manajemen Waktu',           'dim' => 'Pre'],
-        9  => ['label' => 'Kecemasan Tentang Masa Depan','dim' => 'Pre'],
+        0  => ['label' => 'Mudah bergaul dan energik', 'dim' => 'E'],
+        1  => ['label' => 'Kritis dan mudah mencari kesalahan', 'dim' => 'A'],
+        2  => ['label' => 'Dapat diandalkan dan teratur', 'dim' => 'C'],
+        3  => ['label' => 'Mudah cemas atau tegang', 'dim' => 'N'],
+        4  => ['label' => 'Terbuka pada ide baru', 'dim' => 'O'],
+        5  => ['label' => 'Pendiam dan menjaga jarak', 'dim' => 'E'],
+        6  => ['label' => 'Empatik dan membantu orang lain', 'dim' => 'A'],
+        7  => ['label' => 'Kurang teratur dan menunda pekerjaan', 'dim' => 'C'],
+        8  => ['label' => 'Tenang dan mampu mengendalikan stres', 'dim' => 'N'],
+        9  => ['label' => 'Kurang tertarik mencoba hal baru', 'dim' => 'O'],
     ];
 
     $dimColor = [
-        'Kel' => ['bg' => '#ef4444', 'text' => '#ef4444', 'badge' => 'badge-kel'],
-        'Dep' => ['bg' => '#f97316', 'text' => '#f97316', 'badge' => 'badge-dep'],
-        'Pre' => ['bg' => '#eab308', 'text' => '#eab308', 'badge' => 'badge-pre'],
+        'O' => ['bg' => '#0ea5e9', 'text' => '#0ea5e9', 'badge' => 'badge-dep', 'label' => 'Openness'],
+        'C' => ['bg' => '#ef4444', 'text' => '#ef4444', 'badge' => 'badge-kel', 'label' => 'Conscientiousness'],
+        'E' => ['bg' => '#eab308', 'text' => '#eab308', 'badge' => 'badge-pre', 'label' => 'Extraversion'],
+        'A' => ['bg' => '#22c55e', 'text' => '#22c55e', 'badge' => 'badge-kel', 'label' => 'Agreeableness'],
+        'N' => ['bg' => '#a855f7', 'text' => '#a855f7', 'badge' => 'badge-dep', 'label' => 'Neuroticism'],
     ];
 
-    $jawaban     = $jawaban     ?? array_fill(0, 10, 0);
-    $total       = $total       ?? 0;
-    $kelelahan   = array_sum(array_slice($jawaban, 0, 4));
-    $depersonalisasi = array_sum(array_slice($jawaban, 4, 3));
-    $prestasi    = array_sum(array_slice($jawaban, 7, 3));
+    $jawaban = $jawaban ?? array_fill(0, 10, 1);
 
-    // Persen dimensi (maks Kel=20, Dep=15, Pre=15)
-    $kelPct  = $kelelahan      > 0 ? round($kelelahan   / 20 * 100) : 0;
-    $depPct  = $depersonalisasi> 0 ? round($depersonalisasi / 15 * 100) : 0;
-    $prePct  = $prestasi       > 0 ? round($prestasi    / 15 * 100) : 0;
+    $aspekPsikologi = $aspekPsikologi ?? [
+        'openness' => ['label' => 'Openness', 'items' => [4, 9], 'bobot' => 0.15, 'warna' => '#0ea5e9', 'kode' => 'O'],
+        'conscientiousness' => ['label' => 'Conscientiousness', 'items' => [2, 7], 'bobot' => 0.25, 'warna' => '#ef4444', 'kode' => 'C'],
+        'extraversion' => ['label' => 'Extraversion', 'items' => [0, 5], 'bobot' => 0.20, 'warna' => '#eab308', 'kode' => 'E'],
+        'agreeableness' => ['label' => 'Agreeableness', 'items' => [1, 6], 'bobot' => 0.15, 'warna' => '#22c55e', 'kode' => 'A'],
+        'neuroticism' => ['label' => 'Neuroticism', 'items' => [3, 8], 'bobot' => 0.25, 'warna' => '#a855f7', 'kode' => 'N'],
+    ];
 
-    // Level risiko
-    if ($total >= 35)      { $risikoLabel = 'RISIKO TINGGI'; $risikoClass = 'badge-risiko-tinggi'; }
-    elseif ($total >= 20)  { $risikoLabel = 'RISIKO SEDANG'; $risikoClass = 'badge-risiko-sedang'; }
-    else                   { $risikoLabel = 'RISIKO RENDAH'; $risikoClass = 'badge-risiko-rendah'; }
+    $defaultWarna = [
+        'openness' => '#0ea5e9',
+        'conscientiousness' => '#ef4444',
+        'extraversion' => '#eab308',
+        'agreeableness' => '#22c55e',
+        'neuroticism' => '#a855f7',
+    ];
+    $defaultKode = [
+        'openness' => 'O',
+        'conscientiousness' => 'C',
+        'extraversion' => 'E',
+        'agreeableness' => 'A',
+        'neuroticism' => 'N',
+    ];
 
-    $cf    = round($total / 50, 2);         // max 50, bukan 100
-    $cfPct = round($total / 50 * 100);      // persentase yang benar
+    foreach ($aspekPsikologi as $key => $data) {
+        if (!isset($aspekPsikologi[$key]['warna'])) {
+            $aspekPsikologi[$key]['warna'] = $defaultWarna[$key] ?? '#64748b';
+        }
+        if (!isset($aspekPsikologi[$key]['kode'])) {
+            $aspekPsikologi[$key]['kode'] = $defaultKode[$key] ?? strtoupper(substr($key, 0, 1));
+        }
+        if (!isset($aspekPsikologi[$key]['persen'])) {
+            $raw = array_sum(array_map(fn($index) => $jawaban[$index] ?? 1, $data['items']));
+            $min = count($data['items']);
+            $max = count($data['items']) * 5;
+            $aspekPsikologi[$key]['skor'] = $raw;
+            $aspekPsikologi[$key]['persen'] = round((($raw - $min) / ($max - $min)) * 100);
+        }
+    }
+
+    $total = $total ?? round(array_sum(array_column($aspekPsikologi, 'persen')) / count($aspekPsikologi));
+    $cf = round($total / 100, 2);
+    $cfPct = $total;
+
+    $risikoLabel = $kategoriRisiko ?? match (true) {
+        $total >= 70 => 'RISIKO TINGGI',
+        $total >= 40 => 'RISIKO SEDANG',
+        default => 'RISIKO RENDAH',
+    };
+
+    $risikoClass = match ($risikoLabel) {
+        'RISIKO TINGGI' => 'badge-risiko-tinggi',
+        'RISIKO SEDANG' => 'badge-risiko-sedang',
+        default => 'badge-risiko-rendah',
+    };
+
+    $edas = $edas ?? null;
+    $edasScore = $edas['terbaik']['skor'] ?? null;
+
+    $kelPct = $aspekPsikologi['conscientiousness']['persen'] ?? 0;
+    $depPct = $aspekPsikologi['neuroticism']['persen'] ?? 0;
+    $prePct = $aspekPsikologi['extraversion']['persen'] ?? 0;
 
     // Nama user
     $namaUser = Auth::user()->name ?? 'Pengguna';
@@ -394,6 +437,58 @@
     margin: 15px;
     size: A4 portrait;
 }
+
+/* ===================== EXPLAINABLE AI (XAI) ===================== */
+.xai-toggle-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    color: #1e40af;
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 12px;
+    transition: all 0.2s;
+}
+.xai-toggle-btn:hover {
+    background: #dbeafe;
+}
+.xai-toggle-btn svg {
+    transition: transform 0.2s ease;
+}
+.xai-details {
+    display: none;
+    margin-top: 14px;
+    padding: 16px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    border-top: 2px solid #3b82f6;
+}
+.xai-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 11px;
+    color: #334155;
+    margin-bottom: 6px;
+}
+.xai-table th {
+    background: #f1f5f9;
+    border: 1px solid #cbd5e1;
+    padding: 8px 10px;
+    text-align: left;
+    font-weight: 700;
+}
+.xai-table td {
+    border: 1px solid #cbd5e1;
+    padding: 8px 10px;
+    vertical-align: top;
+    background: white;
+}
 </style>
 
 <div class="sbcare-wrapper">
@@ -471,21 +566,13 @@
                 </div>
 
                 <div class="summary-right">
+                    @foreach($aspekPsikologi as $aspek)
                     <div class="dim-row">
-                        <span class="dim-label">Kelelahan</span>
-                        <div class="dim-dot" style="background:#ef4444"></div>
-                        <span class="dim-val">{{ $kelPct }}%</span>
+                        <span class="dim-label">{{ $aspek['label'] }}</span>
+                        <div class="dim-dot" style="background:{{ $aspek['warna'] }}"></div>
+                        <span class="dim-val">{{ $aspek['persen'] }}%</span>
                     </div>
-                    <div class="dim-row">
-                        <span class="dim-label">Depersonal</span>
-                        <div class="dim-dot" style="background:#f97316"></div>
-                        <span class="dim-val">{{ $depPct }}%</span>
-                    </div>
-                    <div class="dim-row">
-                        <span class="dim-label">Prestasi</span>
-                        <div class="dim-dot" style="background:#eab308"></div>
-                        <span class="dim-val">{{ $prePct }}%</span>
-                    </div>
+                    @endforeach
                     <div class="user-line">Pengguna &nbsp;{{ $namaUser }}</div>
                 </div>
             </div>
@@ -499,7 +586,7 @@
                         <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
                         </svg>
-                        Analisis Dimensi Masalah
+                        Analisis Kepribadian OCEAN
                     </div>
                     <div class="chart-wrap">
                         <canvas id="chartBurnout"></canvas>
@@ -551,24 +638,129 @@
                         </svg>
                         Logika Pakar
                     </div>
-                    <span class="cf-badge">Certainty Factor: {{ number_format($cf * 100, 1) }}%</span>
+                    <span class="cf-badge">Skor EDAS: {{ $edasScore !== null ? number_format($edasScore, 2) . '%' : number_format($total, 1) . '%' }}</span>
                 </div>
 
-                <div class="penelusuran-title">Penelusuran Aturan</div>
+                <div class="penelusuran-title">Perhitungan SPK Metode EDAS</div>
 
                 <div class="fallback-box">
                     <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                     </svg>
-                    <p>Tidak ada aturan spesifik yang mencapai batas kritis</p>
-                    <small>Diagnosis didasarkan pada akumulasi nilai rata – rata (Fallback).</small>
+                    <p>Alternatif terbaik: {{ $risikoLabel }}</p>
+                    <small>EDAS meranking alternatif Risiko Rendah, Sedang, dan Tinggi berdasarkan jarak trait OCEAN dari solusi rata-rata.</small>
                 </div>
+
+                @if($edas && isset($edas['ranking']))
+                <div class="var-list" style="margin-top:12px;">
+                    @foreach($edas['ranking'] as $kode => $rank)
+                    <div class="var-item">
+                        <span class="var-badge {{ $kode === 'tinggi' ? 'badge-kel' : ($kode === 'sedang' ? 'badge-pre' : 'badge-dep') }}">{{ strtoupper(substr($kode, 0, 1)) }}</span>
+                        <span class="var-label">{{ $rank['label'] }}</span>
+                        <div class="var-bar-wrap">
+                            <div class="var-bar-track">
+                                <div class="var-bar-fill" style="width:{{ $rank['skor'] }}%; background:#3b82f6"></div>
+                            </div>
+                        </div>
+                        <span class="var-score">{{ number_format($rank['skor'], 2) }}</span>
+                    </div>
+                    @endforeach
+                </div>
+                @endif
+                
+                <button class="xai-toggle-btn" onclick="toggleXaiDetails()">
+                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" width="13" height="13" id="xai-toggle-icon" style="transform: rotate(0deg);">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                    </svg>
+                    Tampilkan Detail Transparansi Matematis (Explainable AI)
+                </button>
+
+                <div class="xai-details" id="xai-details-content">
+                    <div style="font-size: 12px; font-weight: 700; color: #1e293b; margin-bottom: 6px;">Matriks Evaluasi & Kecocokan Trait (Similarity Matrix)</div>
+                    <p style="font-size: 11px; color: #64748b; margin-bottom: 12px; line-height: 1.5;">
+                        Tabel di bawah ini menunjukkan tingkat kemiripan/kecocokan antara skor kepribadian Anda dengan target profil pakar untuk setiap alternatif risiko (dihitung menggunakan formula $100 - |\text{Skor Anda} - \text{Target Pakar}|$). Solusi Rata-rata (AV) dihitung sebagai rata-rata tingkat kemiripan dari ketiga alternatif untuk mengukur tingkat kejauhan keputusan (PDA/NDA) dalam metode EDAS.
+                    </p>
+
+                    <div style="overflow-x: auto;">
+                        <table class="xai-table">
+                            <thead>
+                                <tr>
+                                    <th>Kriteria (Trait)</th>
+                                    <th>Bobot</th>
+                                    <th>Skor Anda</th>
+                                    <th>Target Rendah</th>
+                                    <th>Target Sedang</th>
+                                    <th>Target Tinggi</th>
+                                    <th>Rata-rata (AV)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @php
+                                    $pakarTargets = [
+                                        'openness' => ['rendah' => 65, 'sedang' => 55, 'tinggi' => 40],
+                                        'conscientiousness' => ['rendah' => 80, 'sedang' => 55, 'tinggi' => 25],
+                                        'extraversion' => ['rendah' => 65, 'sedang' => 50, 'tinggi' => 35],
+                                        'agreeableness' => ['rendah' => 70, 'sedang' => 55, 'tinggi' => 35],
+                                        'neuroticism' => ['rendah' => 20, 'sedang' => 55, 'tinggi' => 85],
+                                    ];
+                                @endphp
+                                @foreach($aspekPsikologi as $key => $aspek)
+                                <tr>
+                                    <td style="font-weight: 700; background: #f8fafc;">
+                                        <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:{{ $aspek['warna'] }}; margin-right:4px;"></span>
+                                        {{ $aspek['label'] }} ({{ $aspek['kode'] }})
+                                    </td>
+                                    <td style="text-align: center; font-weight: 600;">{{ number_format($aspek['bobot'] * 100) }}%</td>
+                                    <td style="font-weight: 700; color: #2563eb; text-align: center; background: #eff6ff;">{{ $aspek['persen'] }}%</td>
+                                    
+                                    {{-- Rendah --}}
+                                    <td>
+                                        <div style="font-weight: 600; color: #475569;">Target: {{ $pakarTargets[$key]['rendah'] }}%</div>
+                                        <div style="color: #16a34a; font-weight: 700; margin-top: 2px;">Cocok: {{ number_format($edas['matrix']['rendah'][$key], 1) }}%</div>
+                                    </td>
+
+                                    {{-- Sedang --}}
+                                    <td>
+                                        <div style="font-weight: 600; color: #475569;">Target: {{ $pakarTargets[$key]['sedang'] }}%</div>
+                                        <div style="color: #d97706; font-weight: 700; margin-top: 2px;">Cocok: {{ number_format($edas['matrix']['sedang'][$key], 1) }}%</div>
+                                    </td>
+
+                                    {{-- Tinggi --}}
+                                    <td>
+                                        <div style="font-weight: 600; color: #475569;">Target: {{ $pakarTargets[$key]['tinggi'] }}%</div>
+                                        <div style="color: #dc2626; font-weight: 700; margin-top: 2px;">Cocok: {{ number_format($edas['matrix']['tinggi'][$key], 1) }}%</div>
+                                    </td>
+
+                                    {{-- Average Solution --}}
+                                    <td style="font-weight: 700; background: #f8fafc; text-align: center; color: #0f172a;">
+                                        {{ number_format($edas['average_solution'][$key], 2) }}%
+                                    </td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <script>
+                    function toggleXaiDetails() {
+                        var content = document.getElementById('xai-details-content');
+                        var icon = document.getElementById('xai-toggle-icon');
+                        if (content.style.display === 'block') {
+                            content.style.display = 'none';
+                            icon.style.transform = 'rotate(0deg)';
+                        } else {
+                            content.style.display = 'block';
+                            icon.style.transform = 'rotate(180deg)';
+                        }
+                    }
+                </script>
 
                 <div class="cf-note">
                     <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                     </svg>
-                    Analisis ini dihitung menggunakan metode <strong>&nbsp;Certainty Factor&nbsp;</strong> yang memproses probabilitas keyakinan pakar terhadap gejala yang Anda alami.
+                    Nilai kriteria berasal dari model OCEAN/Big Five, lalu model EDAS memilih alternatif keputusan dengan appraisal score tertinggi.
                 </div>
             </div>
 
@@ -581,21 +773,28 @@
                     Rekomendasi Pakar dan Tindakan
                 </div>
 
-                @if($total > 35)
-                <div class="rekom-alert tinggi">
-                    <div class="saran-label">💡 Saran Utama:</div>
-                    <p>Kondisi Anda menunjukkan tingkat burnout yang tinggi. Disarankan untuk segera melakukan penyesuaian pola aktivitas dan mencari dukungan profesional agar kondisi tidak semakin memburuk.</p>
-                </div>
-                @elseif($total > 20)
-                <div class="rekom-alert sedang">
-                    <div class="saran-label">💡 Saran Utama:</div>
-                    <p>Tingkat burnout Anda berada di level sedang. Perlu manajemen waktu yang lebih baik dan istirahat yang cukup untuk mencegah kondisi memburuk.</p>
+                @if(!empty($aiRekomendasi))
+                <div class="rekom-alert" style="background:#f0f9ff; border-color:#38bdf8;">
+                    <div class="saran-label" style="color:#0ea5e9;">🤖 Rekomendasi AI Gemini:</div>
+                    <p style="color:#0e7490;">{!! nl2br(e($aiRekomendasi)) !!}</p>
                 </div>
                 @else
-                <div class="rekom-alert rendah">
-                    <div class="saran-label rendah">✅ Saran Utama:</div>
-                    <p class="rendah">Kondisi Anda masih baik. Tetap jaga keseimbangan aktivitas dan istirahat yang cukup untuk mempertahankan kondisi ini.</p>
-                </div>
+                    @if($total >= 70)
+                    <div class="rekom-alert tinggi">
+                        <div class="saran-label">💡 Saran Utama:</div>
+                        <p>Kondisi Anda menunjukkan tingkat burnout yang tinggi. Disarankan untuk segera melakukan penyesuaian pola aktivitas dan mencari dukungan profesional agar kondisi tidak semakin memburuk.</p>
+                    </div>
+                    @elseif($total >= 40)
+                    <div class="rekom-alert sedang">
+                        <div class="saran-label">💡 Saran Utama:</div>
+                        <p>Tingkat burnout Anda berada di level sedang. Perlu manajemen waktu yang lebih baik dan istirahat yang cukup untuk mencegah kondisi memburuk.</p>
+                    </div>
+                    @else
+                    <div class="rekom-alert rendah">
+                        <div class="saran-label rendah">✅ Saran Utama:</div>
+                        <p class="rendah">Kondisi Anda masih baik. Tetap jaga keseimbangan aktivitas dan istirahat yang cukup untuk mempertahankan kondisi ini.</p>
+                    </div>
+                    @endif
                 @endif
 
                 <div class="periodic-note">
@@ -641,7 +840,7 @@
                         <td style="padding:7px 14px; color:#64748b; font-size:11px;">Angkatan</td>
                         <td style="padding:7px 14px; font-weight:600;">: {{ Auth::user()->angkatan ?? '-' }}</td>
                         <td style="padding:7px 14px; color:#64748b; font-size:11px;">Metode Analisis</td>
-                        <td style="padding:7px 14px; font-weight:600;">: Certainty Factor</td>
+                        <td style="padding:7px 14px; font-weight:600;">: EDAS</td>
                     </tr>
                 </tbody>
             </table>
@@ -659,7 +858,7 @@
                             <div style="font-size:32px; font-weight:800; color:{{ $total >= 70 ? '#ef4444' : ($total >= 40 ? '#f59e0b' : '#22c55e') }}; line-height:1;">
                                 {{ $total }}.0%
                             </div>
-                            <div style="font-size:11px; color:#64748b; margin-top:4px;">Tingkat Kapasitas (CF)</div>
+                            <div style="font-size:11px; color:#64748b; margin-top:4px;">Indeks Risiko Psikologis</div>
                             <div style="margin-top:8px; font-size:12px; font-weight:800; color:{{ $total >= 70 ? '#ef4444' : ($total >= 40 ? '#f59e0b' : '#22c55e') }};">
                                 {{ $risikoLabel }}
                             </div>
@@ -668,37 +867,19 @@
 
                     {{-- Skor Dimensi --}}
                     <td style="vertical-align:top;">
-                        <div style="font-size:12px; font-weight:700; color:#1e293b; margin-bottom:10px;">Skor Dimensi Burnout</div>
+                        <div style="font-size:12px; font-weight:700; color:#1e293b; margin-bottom:10px;">Skor Trait OCEAN</div>
 
+                        @foreach($aspekPsikologi as $aspek)
                         <div style="margin-bottom:8px;">
-                            <div style="font-size:11px; color:#64748b; margin-bottom:3px;">Kelelahan Emosional</div>
+                            <div style="font-size:11px; color:#64748b; margin-bottom:3px;">{{ $aspek['label'] }}</div>
                             <div style="display:flex; align-items:center; gap:8px;">
                                 <div style="flex:1; height:10px; background:#f1f5f9; border-radius:5px; overflow:hidden;">
-                                    <div style="width:{{ $kelPct }}%; height:100%; background:#ef4444; border-radius:5px;"></div>
+                                    <div style="width:{{ $aspek['persen'] }}%; height:100%; background:{{ $aspek['warna'] }}; border-radius:5px;"></div>
                                 </div>
-                                <span style="font-size:11px; font-weight:600; min-width:30px;">{{ $kelPct }}%</span>
+                                <span style="font-size:11px; font-weight:600; min-width:30px;">{{ $aspek['persen'] }}%</span>
                             </div>
                         </div>
-
-                        <div style="margin-bottom:8px;">
-                            <div style="font-size:11px; color:#64748b; margin-bottom:3px;">Depersonalisasi</div>
-                            <div style="display:flex; align-items:center; gap:8px;">
-                                <div style="flex:1; height:10px; background:#f1f5f9; border-radius:5px; overflow:hidden;">
-                                    <div style="width:{{ $depPct }}%; height:100%; background:#f97316; border-radius:5px;"></div>
-                                </div>
-                                <span style="font-size:11px; font-weight:600; min-width:30px;">{{ $depPct }}%</span>
-                            </div>
-                        </div>
-
-                        <div>
-                            <div style="font-size:11px; color:#64748b; margin-bottom:3px;">Kepuasan Prestasi</div>
-                            <div style="display:flex; align-items:center; gap:8px;">
-                                <div style="flex:1; height:10px; background:#f1f5f9; border-radius:5px; overflow:hidden;">
-                                    <div style="width:{{ $prePct }}%; height:100%; background:#eab308; border-radius:5px;"></div>
-                                </div>
-                                <span style="font-size:11px; font-weight:600; min-width:30px;">{{ $prePct }}%</span>
-                            </div>
-                        </div>
+                        @endforeach
                     </td>
                 </tr>
             </table>
@@ -710,9 +891,9 @@
             <div style="background:#fffbeb; border:1px solid #fde68a; border-radius:8px; padding:14px 16px; margin-bottom:16px;">
                 <div style="font-size:11px; font-weight:700; color:#92400e; margin-bottom:6px;">💡 Saran Utama:</div>
                 <p style="font-size:12px; color:#78350f; margin:0; line-height:1.6;">
-                    @if($total > 35)
+                    @if($total >= 70)
                         Kondisi Anda menunjukkan tingkat burnout yang tinggi. Disarankan untuk segera melakukan penyesuaian pola aktivitas dan mencari dukungan profesional agar kondisi tidak semakin memburuk.
-                    @elseif($total > 20)
+                    @elseif($total >= 40)
                         Tingkat burnout Anda berada di level sedang. Perlu manajemen waktu yang lebih baik dan istirahat yang cukup untuk mencegah kondisi memburuk.
                     @else
                         Kondisi Anda masih baik. Tetap jaga keseimbangan aktivitas dan istirahat yang cukup untuk mempertahankan kondisi ini.
@@ -722,11 +903,11 @@
 
             {{-- LOGIKA DIAGNOSIS --}}
             <div style="font-size:13px; font-weight:700; color:#1e293b; margin-bottom:10px; padding-bottom:4px; border-bottom:2px solid #e2e8f0;">
-                Logika Diagnosis
+                Logika Diagnosis EDAS
             </div>
             <div style="background:#f8fafc; border:1px dashed #cbd5e1; border-radius:8px; padding:20px; text-align:center; margin-bottom:16px;">
-                <div style="font-size:12px; font-weight:600; color:#64748b;">Tidak ada aturan spesifik yang mencapai batas kritis</div>
-                <div style="font-size:11px; color:#94a3b8; margin-top:4px;">Diagnosis didasarkan pada akumulasi nilai rata – rata (Fallback).</div>
+                <div style="font-size:12px; font-weight:600; color:#64748b;">Alternatif terbaik: {{ $risikoLabel }}</div>
+                <div style="font-size:11px; color:#94a3b8; margin-top:4px;">Skor EDAS: {{ $edasScore !== null ? number_format($edasScore, 2) . '%' : '-' }}. Alternatif dengan appraisal score tertinggi dipilih sebagai hasil keputusan.</div>
             </div>
 
             {{-- TABEL DETAIL --}}
@@ -747,14 +928,26 @@
                 <tbody>
                     @php
                     $keteranganMap = [
-                        1 => ['Sangat Ringan','Hampir tidak ada beban'],
-                        2 => ['Ringan','Beban masih terkelola'],
-                        3 => ['Cukup','Kadang semangat, kadang tidak'],
-                        4 => ['Berat','Sering kewalahan'],
-                        5 => ['Sangat Berat','Hampir selalu kewalahan'],
+                        1 => ['Sangat Tidak Setuju','Tidak sesuai'],
+                        2 => ['Tidak Setuju','Kurang sesuai'],
+                        3 => ['Netral','Cukup sesuai'],
+                        4 => ['Setuju','Sesuai'],
+                        5 => ['Sangat Setuju','Sangat sesuai'],
                     ];
-                    $dimLabel = ['Kel'=>'Kelelahan','Dep'=>'Depersonalisasi','Pre'=>'Prestasi'];
-                    $dimColorText = ['Kel'=>'#ef4444','Dep'=>'#f97316','Pre'=>'#eab308'];
+                    $dimLabel = [
+                        'O' => 'Openness',
+                        'C' => 'Conscientiousness',
+                        'E' => 'Extraversion',
+                        'A' => 'Agreeableness',
+                        'N' => 'Neuroticism',
+                    ];
+                    $dimColorText = [
+                        'O' => '#0ea5e9',
+                        'C' => '#ef4444',
+                        'E' => '#eab308',
+                        'A' => '#22c55e',
+                        'N' => '#a855f7',
+                    ];
                     @endphp
 
                     @foreach($namaVariabel as $i => $v)
@@ -806,18 +999,17 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 document.addEventListener("DOMContentLoaded", function () {
-    const kel  = {{ $kelelahan }};
-    const dep  = {{ $depersonalisasi }};
-    const pre  = {{ $prestasi }};
+    const aspekLabels = @json(array_column($aspekPsikologi, 'label'));
+    const aspekScores = @json(array_column($aspekPsikologi, 'persen'));
 
     new Chart(document.getElementById('chartBurnout'), {
         type: 'radar',
         data: {
-            labels: ['Kelelahan Emosional', 'Depersonalisasi', 'Pencapaian'],
+            labels: aspekLabels,
             datasets: [
                 {
                     label: 'Skor Anda',
-                    data: [kel, dep, pre],
+                    data: aspekScores,
                     fill: true,
                     borderColor: '#ef4444',
                     backgroundColor: 'rgba(239,68,68,0.25)',
@@ -826,8 +1018,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     borderWidth: 2,
                 },
                 {
-                    label: 'Area Tidak Sehat',
-                    data: [20, 15, 15],
+                    label: 'Area Risiko Tinggi',
+                    data: [70, 70, 70, 70, 70],
                     fill: true,
                     borderColor: 'rgba(148,163,184,0.4)',
                     backgroundColor: 'rgba(148,163,184,0.08)',
@@ -846,8 +1038,8 @@ document.addEventListener("DOMContentLoaded", function () {
             scales: {
                 r: {
                     suggestedMin: 0,
-                    suggestedMax: 20,
-                    ticks: { stepSize: 5, font: { size: 9 }, color: '#94a3b8' },
+                    suggestedMax: 100,
+                    ticks: { stepSize: 20, font: { size: 9 }, color: '#94a3b8' },
                     grid:  { color: 'rgba(0,0,0,0.06)' },
                     pointLabels: { font: { size: 10 }, color: '#64748b', padding: 15 }
                 }
