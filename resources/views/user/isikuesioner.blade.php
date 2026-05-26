@@ -15,8 +15,8 @@
         <div class="instruksi-left">
             <div class="instr-title">Instruksi Pengisian</div>
             <p>
-                Jawab <strong>10 pertanyaan</strong> berikut secara jujur berdasarkan kondisi Anda dalam
-                <strong>2 minggu terakhir</strong>. Pilih jawaban yang paling mencerminkan keadaan anda.
+                Jawab <strong>10 pernyataan</strong> berikut secara jujur berdasarkan gambaran diri Anda secara umum.
+                Pilih tingkat persetujuan yang paling mencerminkan diri anda.
                 Tidak ada jawaban benar atau salah.
             </p>
         </div>
@@ -276,76 +276,151 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const colors = ["green", "light-green", "yellow", "orange", "red"];
 
-    const questions = [
+    const oldQuestions = [
         {
-            cat: "KELELAHAN",
+            cat: "BEBAN AKADEMIK",
             catColor: "#F91414",
             title: "Beban Tugas Kuliah",
             desc: "Seberapa berat beban tugas kuliah yang kamu rasakan saat ini?",
             opts: [["Sangat Ringan","Tidak ada tekanan"],["Ringan","Mudah dikelola"],["Sedang","Masih bisa ditangani"],["Berat","Sering kewalahan"],["Sangat Berat","Hampir tidak tertangani"]]
         },
         {
-            cat: "KELELAHAN",
-            catColor: "#F91414",
+            cat: "PEMULIHAN FISIK",
+            catColor: "#0EA5E9",
             title: "Kualitas dan Kuantitas Tidur",
             desc: "Bagaimana kualitas tidur kamu dalam 2 minggu terakhir?",
             opts: [["Sangat Baik","7-8 jam, nyenyak"],["Baik","6-7 jam, cukup nyenyak"],["Cukup","5-6 jam Kadang terganggu"],["Buruk","4-5 jam Sering terganggu"],["Sangat Buruk","< 4 jam sering insomnia"]]
         },
         {
-            cat: "PRESTASI",
-            catColor: "#22C55E",
+            cat: "MOTIVASI & PRESTASI",
+            catColor: "#EAB308",
             title: "Motivasi Belajar",
             desc: "Seberapa besar motivasi kamu untuk belajar dan mengerjakan tugas saat ini?",
             opts: [["Sangat Tinggi","Penuh semangat"],["Tinggi","Masih termotivasi"],["Cukup","Naik turun"],["Rendah","Sering malas"],["Sangat Rendah","Tidak ada motivasi"]]
         },
         {
-            cat: "DEPERSONALISASI",
-            catColor: "#EAB308",
+            cat: "DUKUNGAN SOSIAL",
+            catColor: "#22C55E",
             title: "Dukungan Sosial",
             desc: "Seberapa besar dukungan dari keluarga, teman, atau orang sekitar?",
             opts: [["Sangat Baik","Selalu didukung"],["Baik","Cukup didukung"],["Cukup","Kadang ada"],["Buruk","Jarang ada"],["Sangat Buruk","Merasa sendirian"]]
         },
         {
-            cat: "KELELAHAN",
-            catColor: "#F91414",
+            cat: "PEMULIHAN FISIK",
+            catColor: "#0EA5E9",
             title: "Kondisi Fisik dan Kesehatan",
             desc: "Bagaimana kondisi fisik dan kesehatanmu secara umum dalam 2 minggu ini?",
             opts: [["Sangat Baik","Tidak ada keluhan"],["Baik","Sangat baik"],["Cukup","Sedikit keluhan"],["Buruk","Sering tidak fit"],["Sangat Buruk","Sering sakit"]]
         },
         {
-            cat: "KELELAHAN",
-            catColor: "#F91414",
+            cat: "DUKUNGAN FINANSIAL",
+            catColor: "#22C55E",
             title: "Tekanan Keuangan",
             desc: "Seberapa besar tekanan finansial yang kamu rasakan sehari-hari?",
             opts: [["Tidak Ada","Aman finansial"],["Kecil","Masih terkendali"],["Sedang","Cukup khawatir"],["Besar","Sering stres"],["Sangat Besar","Sangat tertekan"]]
         },
         {
-            cat: "DEPESONALISASI",
-            catColor: "#EAB308",
+            cat: "REGULASI EMOSI",
+            catColor: "#A855F7",
             title: "Keseimbangan Emosi",
             desc: "Seberapa stabil kondisi emosi kamu — apakah mudah marah, sedih, atau cemas?",
             opts: [["Sangat Stabil","Tenang & terkontrol"],["Stabil","Cukup baik"],["Cukup Stabil","Kadang terganggu"],["Tidak Stabil","Sering berubah"],["Sangat Tidak Stabil","Sulit dikendalikan"]]
         },
         {
-            cat: "PRESTASI",
-            catColor: "#22C55E",
+            cat: "MOTIVASI & PRESTASI",
+            catColor: "#EAB308",
             title: "Kepuasan Prestasi Akademik",
             desc: "Seberapa puas kamu dengan pencapaian akademik yang telah kamu raih?",
             opts: [["Sangat Puas","Melampaui target"],["Puas","Sesuai harapan"],["Cukup Puas","Hampir sesuai"],["Tidak Puas","Di bawah harapan"],["Sangat Tidak Puas","Jauh dari target"]]
         },
         {
-            cat: "PRESTASI",
-            catColor: "#22C55E",
+            cat: "BEBAN AKADEMIK",
+            catColor: "#F91414",
             title: "Manajemen Waktu",
             desc: "Seberapa baik kamu mengelola waktu antara kuliah, istirahat, dan aktivitas lainnya?",
             opts: [["Sangat Baik","Terorganisir"],["Baik","Cukup teratur"],["Cukup","Kadang terlambat"],["Buruk","Sering keteteran"],["Sangat Buruk","Tidak terorganisir"]]
         },
         {
-            cat: "DEPERSONALISASI",
-            catColor: "#EAB308",
+            cat: "KECEMASAN",
+            catColor: "#A855F7",
             title: "Kecemasan Masa Depan",
             desc: "Seberapa sering kamu merasa cemas tentang masa depan dan karier setelah kuliah?",
             opts: [["Sangat Tenang","Tidak khawatir"],["Tenang","Sedikit khawatir"],["Cukup Cemas","Kadang terpikir"],["Cemas","Sering muncul"],["Sangat Cemas","Selalu menghantui"]]
+        }
+    ];
+
+    const agreementOptions = [["Sangat Tidak Setuju","Tidak sesuai"],["Tidak Setuju","Kurang sesuai"],["Netral","Cukup sesuai"],["Setuju","Sesuai"],["Sangat Setuju","Sangat sesuai"]];
+
+    const questions = [
+        {
+            cat: "EXTRAVERSION",
+            catColor: "#EAB308",
+            title: "Saya mudah bergaul dan energik saat bersama orang lain.",
+            desc: "Menilai kecenderungan aktif secara sosial.",
+            opts: agreementOptions
+        },
+        {
+            cat: "AGREEABLENESS",
+            catColor: "#22C55E",
+            title: "Saya sering bersikap kritis dan mudah mencari kesalahan orang lain.",
+            desc: "Item reverse untuk keramahan dan kooperatif.",
+            opts: agreementOptions
+        },
+        {
+            cat: "CONSCIENTIOUSNESS",
+            catColor: "#EF4444",
+            title: "Saya dapat diandalkan dan menyelesaikan tugas dengan teratur.",
+            desc: "Menilai kedisiplinan dan tanggung jawab.",
+            opts: agreementOptions
+        },
+        {
+            cat: "NEUROTICISM",
+            catColor: "#A855F7",
+            title: "Saya mudah merasa cemas, tegang, atau khawatir.",
+            desc: "Menilai kerentanan terhadap emosi negatif.",
+            opts: agreementOptions
+        },
+        {
+            cat: "OPENNESS",
+            catColor: "#0EA5E9",
+            title: "Saya terbuka pada ide baru, imajinatif, dan suka belajar hal baru.",
+            desc: "Menilai keterbukaan terhadap pengalaman.",
+            opts: agreementOptions
+        },
+        {
+            cat: "EXTRAVERSION",
+            catColor: "#EAB308",
+            title: "Saya cenderung pendiam dan menjaga jarak dalam situasi sosial.",
+            desc: "Item reverse untuk extraversion.",
+            opts: agreementOptions
+        },
+        {
+            cat: "AGREEABLENESS",
+            catColor: "#22C55E",
+            title: "Saya mudah berempati dan berusaha membantu orang lain.",
+            desc: "Menilai kepedulian dan kerja sama.",
+            opts: agreementOptions
+        },
+        {
+            cat: "CONSCIENTIOUSNESS",
+            catColor: "#EF4444",
+            title: "Saya sering kurang teratur dan mudah menunda pekerjaan.",
+            desc: "Item reverse untuk conscientiousness.",
+            opts: agreementOptions
+        },
+        {
+            cat: "NEUROTICISM",
+            catColor: "#A855F7",
+            title: "Saya biasanya tenang dan mampu mengendalikan stres.",
+            desc: "Item reverse untuk neuroticism.",
+            opts: agreementOptions
+        },
+        {
+            cat: "OPENNESS",
+            catColor: "#0EA5E9",
+            title: "Saya lebih menyukai rutinitas tetap dan kurang tertarik mencoba hal baru.",
+            desc: "Item reverse untuk openness.",
+            opts: agreementOptions
         }
     ];
 

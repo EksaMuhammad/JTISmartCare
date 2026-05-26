@@ -56,7 +56,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/history', [HistoryController::class, 'index'])->name('history.index');
 
     // Knowledge Base
-    Route::get('/knowledge', [KnowledgeController::class, 'index'])->name('knowledge.index');
+    // Route::get('/knowledge', [KnowledgeController::class, 'index'])->name('knowledge.index');
     
     // Artikel
     Route::prefix('articles')->name('articles.')->group(function () {
@@ -75,5 +75,11 @@ Route::middleware(['auth'])->group(function () {
         
         Route::get('/monitoring', [MonitoringController::class, 'index'])
             ->name('monitoring');
+        
+        // ===== ADMIN KNOWLEDGE BASE =====
+        Route::get('/knowledge', [KnowledgeController::class, 'index'])->name('knowledge.index');
+        Route::post('/knowledge/store', [KnowledgeController::class, 'store'])->name('knowledge.store');
+        Route::post('/knowledge/{id}/update', [KnowledgeController::class, 'update'])->name('knowledge.update');
+        Route::delete('/knowledge/{id}/delete', [KnowledgeController::class, 'destroy'])->name('knowledge.destroy');
     });
 });

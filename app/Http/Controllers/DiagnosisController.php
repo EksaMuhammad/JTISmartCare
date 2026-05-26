@@ -80,10 +80,6 @@ class DiagnosisController extends Controller
         return "Export PDF ID: " . $id;
     }
 
-    /**
-     * Perhitungan OCEAN (Big Five) menggunakan rata-rata skor dinormalisasi 0-100
-     * Referensi: John, O. P., & Srivastava, S. (1999). Handbook of personality: Theory and research. https://pages.ucsd.edu/~mboyle/COGS260/JohnSrivastava1999.pdf
-     */
     private function hitungEdasOcean(array $jawaban): array
     {
         $aspek = [
@@ -96,6 +92,7 @@ class DiagnosisController extends Controller
                 'bobot' => 0.15,
                 'warna' => '#0ea5e9',
                 'kode' => 'O',
+                'deskripsi' => 'Keterbukaan terhadap pengalaman dan ide baru.',
             ],
             'conscientiousness' => [
                 'label' => 'Conscientiousness',
@@ -106,6 +103,7 @@ class DiagnosisController extends Controller
                 'bobot' => 0.25,
                 'warna' => '#ef4444',
                 'kode' => 'C',
+                'deskripsi' => 'Kedisiplinan, keteraturan, dan kontrol diri.',
             ],
             'extraversion' => [
                 'label' => 'Extraversion',
@@ -116,6 +114,7 @@ class DiagnosisController extends Controller
                 'bobot' => 0.20,
                 'warna' => '#eab308',
                 'kode' => 'E',
+                'deskripsi' => 'Energi sosial dan kecenderungan berinteraksi.',
             ],
             'agreeableness' => [
                 'label' => 'Agreeableness',
@@ -126,6 +125,7 @@ class DiagnosisController extends Controller
                 'bobot' => 0.15,
                 'warna' => '#22c55e',
                 'kode' => 'A',
+                'deskripsi' => 'Kooperatif, empatik, dan mudah bekerja sama.',
             ],
             'neuroticism' => [
                 'label' => 'Neuroticism',
@@ -136,19 +136,21 @@ class DiagnosisController extends Controller
                 'bobot' => 0.25,
                 'warna' => '#a855f7',
                 'kode' => 'N',
+                'deskripsi' => 'Kerentanan terhadap cemas, tegang, dan emosi negatif.',
             ],
         ];
 
         foreach ($aspek as $key => $data) {
-            $scores = array_map(function ($item) use ($jawaban) {
+            $raw = array_sum(array_map(function ($item) use ($jawaban) {
                 $nilai = $jawaban[$item['index']] ?? 1;
                 return $item['reverse'] ? 6 - $nilai : $nilai;
-            }, $data['items']);
+            }, $data['items']));
 
-            $avg = array_sum($scores) / count($scores);
-            // Normalisasi ke 0–100
-            $aspek[$key]['skor'] = $avg;
-            $aspek[$key]['persen'] = round((($avg - 1) / 4) * 100);
+            $min = count($data['items']);
+            $max = count($data['items']) * 5;
+
+            $aspek[$key]['skor'] = $raw;
+            $aspek[$key]['persen'] = round((($raw - $min) / ($max - $min)) * 100);
         }
 
         $riskIndex = $this->hitungIndeksRisikoOcean($aspek);
@@ -162,10 +164,6 @@ class DiagnosisController extends Controller
         ];
     }
 
-    /**
-     * Perhitungan EDAS (Evaluation based on Distance from Average Solution)
-     * Referensi: Ghorabaee, M. K., et al. (2015). https://www.mii.lt/informatica/pdf/INFORMATICA2015_26(3)_435-451.pdf
-     */
     private function prosesEdas(array $aspek): array
     {
         $profilPakar = [
@@ -201,43 +199,39 @@ class DiagnosisController extends Controller
             ],
         ];
 
-        // Matrix: menghitung tingkat kemiripan (similarity) antara skor user dengan target pakar
         $matrix = [];
         foreach ($profilPakar as $kodeAlternatif => $profil) {
             foreach ($aspek as $kodeKriteria => $kriteria) {
-                $matrix[$kodeAlternatif][$kodeKriteria] = 100 - abs($kriteria['persen'] - $profil['target'][$kodeKriteria]);
+                $selisih = abs($kriteria['persen'] - $profil['target'][$kodeKriteria]);
+                $matrix[$kodeAlternatif][$kodeKriteria] = max(0, 100 - $selisih);
             }
         }
 
-        // Hitung rata-rata tiap kriteria
         $average = [];
         foreach (array_keys($aspek) as $kodeKriteria) {
             $nilaiKriteria = array_column($matrix, $kodeKriteria);
             $average[$kodeKriteria] = array_sum($nilaiKriteria) / count($nilaiKriteria);
         }
 
-        // Hitung PDA dan NDA sesuai jurnal
         $ranking = [];
         foreach ($matrix as $kodeAlternatif => $nilaiAlternatif) {
             $sp = 0;
             $sn = 0;
+
             foreach ($nilaiAlternatif as $kodeKriteria => $nilai) {
-                $avg = $average[$kodeKriteria];
+                $avg = max($average[$kodeKriteria], 0.0001);
                 $bobot = $aspek[$kodeKriteria]['bobot'];
-                $pda = max(0, $nilai - $avg);
-                $nda = max(0, $avg - $nilai);
-                
-                // Pembagian dengan average (avg) sesuai dengan rumus standar jurnal EDAS (Ghorabaee et al., 2015)
-                if ($avg > 0) {
-                    $pda = $pda / $avg;
-                    $nda = $nda / $avg;
-                }
-                
+
+                $pda = max(0, ($nilai - $avg) / $avg);
+                $nda = max(0, ($avg - $nilai) / $avg);
+
                 $sp += $bobot * $pda;
                 $sn += $bobot * $nda;
             }
+
             $ranking[$kodeAlternatif] = [
                 'label' => $profilPakar[$kodeAlternatif]['label'],
+                'target' => $profilPakar[$kodeAlternatif]['target'],
                 'sp' => $sp,
                 'sn' => $sn,
             ];
@@ -249,6 +243,9 @@ class DiagnosisController extends Controller
         foreach ($ranking as $kodeAlternatif => $data) {
             $nsp = $data['sp'] / $maxSp;
             $nsn = 1 - ($data['sn'] / $maxSn);
+
+            $ranking[$kodeAlternatif]['nsp'] = $nsp;
+            $ranking[$kodeAlternatif]['nsn'] = $nsn;
             $ranking[$kodeAlternatif]['as'] = ($nsp + $nsn) / 2;
             $ranking[$kodeAlternatif]['skor'] = round($ranking[$kodeAlternatif]['as'] * 100, 2);
         }
