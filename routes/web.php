@@ -27,6 +27,7 @@ Route::middleware('guest')->group(function () {
 
     Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
     Route::post('/register', [AuthController::class, 'register']);
+    
 });
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
@@ -42,18 +43,19 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/admin/dashboard', [DashboardController::class, 'admin'])
         ->name('admin.dashboard');
+// Diagnosis
+Route::prefix('diagnosis')->name('diagnosis.')->group(function () {
+    Route::get('/form', [DiagnosisController::class, 'form'])->name('form');
+    Route::post('/proses', [DiagnosisController::class, 'proses'])->name('proses');
+    Route::get('/hasil', [DiagnosisController::class, 'hasil'])->name('hasil');
+    Route::get('/rekomendasi/{id}', [DiagnosisController::class, 'rekomendasi'])->name('rekomendasi');
+    Route::get('/cetak/{id}', [DiagnosisController::class, 'exportPdf'])->name('cetak');
+    Route::get('/detail/{id}', [DiagnosisController::class, 'detail'])->name('detail'); 
+});
 
-    // Diagnosis
-    Route::prefix('diagnosis')->name('diagnosis.')->group(function () {
-        Route::get('/form', [DiagnosisController::class, 'form'])->name('form');
-        Route::post('/proses', [DiagnosisController::class, 'proses'])->name('proses');
-        Route::get('/hasil', [DiagnosisController::class, 'hasil'])->name('hasil');
-        Route::get('/rekomendasi/{id}', [DiagnosisController::class, 'rekomendasi'])->name('rekomendasi');
-        Route::get('/cetak/{id}', [DiagnosisController::class, 'exportPdf'])->name('cetak');
-    });
-
-    // Riwayat Diagnosis
-    Route::get('/history', [HistoryController::class, 'index'])->name('history.index');
+// Riwayat Diagnosis
+Route::get('/history', [HistoryController::class, 'index'])->name('history.index');
+Route::delete('/history/{id}', [HistoryController::class, 'destroy'])->name('history.destroy'); 
 
     // Knowledge Base
     // Route::get('/knowledge', [KnowledgeController::class, 'index'])->name('knowledge.index');
@@ -82,4 +84,5 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/knowledge/{id}/update', [KnowledgeController::class, 'update'])->name('knowledge.update');
         Route::delete('/knowledge/{id}/delete', [KnowledgeController::class, 'destroy'])->name('knowledge.destroy');
     });
+    
 });

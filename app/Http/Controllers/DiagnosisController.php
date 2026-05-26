@@ -1,72 +1,128 @@
 <?php
 
+// ============================================================
+// STEP 3 - CONTROLLER
+// FILE: app/Http/Controllers/DiagnosisController.php
+// CARA: GANTI SELURUH isi file yang lama dengan kode ini
+// ============================================================
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
 use App\Helpers\GeminiAIHelper;
+use App\Models\DiagnosisSession;
 
 class DiagnosisController extends Controller
 {
+    // ============================================================
+    // FORM KUESIONER
+    // ============================================================
     public function form()
     {
         return view('user.isikuesioner');
     }
 
+    // ============================================================
+    // PROSES JAWABAN → HITUNG → SIMPAN KE DB → REDIRECT HASIL
+    // ============================================================
     public function proses(Request $request)
     {
         $request->validate([
-            'jawaban' => ['required', 'array', 'size:10'],
+            'jawaban'   => ['required', 'array', 'size:10'],
             'jawaban.*' => ['required', 'integer', 'between:1,5'],
         ]);
 
         $jawaban = array_map('intval', $request->jawaban);
+
+        // HITUNG OCEAN + EDAS
         $hasil = $this->hitungEdasOcean($jawaban);
 
-        session([
-            'total_skor' => $hasil['risk_index'],
-            'jawaban' => $jawaban,
+        // REKOMENDASI AI (Gemini)
+        $aiData = [
+            'total_skor'      => $hasil['risk_index'],
+            'jawaban'         => $jawaban,
             'aspek_psikologi' => $hasil['aspek'],
             'kategori_risiko' => $hasil['kategori'],
-            'edas' => $hasil['edas'],
-            'waktu' => now(),
+            'edas'            => $hasil['edas'],
+        ];
+        $aiRekomendasi = GeminiAIHelper::getRecommendation($aiData);
+
+        // ✅ SIMPAN KE DATABASE
+        $session = DiagnosisSession::create([
+            'user_id'         => auth()->id(),
+            'jawaban'         => $jawaban,
+            'aspek_psikologi' => $hasil['aspek'],
+            'edas_result'     => $hasil['edas'],
+            'risk_index'      => $hasil['risk_index'],
+            'total_skor'      => $hasil['risk_index'],
+            'kategori_risiko' => $hasil['kategori'],
+            'rule_terpilih'   => $hasil['edas']['terbaik']['label'] ?? null,
+            'rekomendasi'     => $aiRekomendasi ?? '-',
+            'rekomendasi_ai'  => $aiRekomendasi ?? '-',
+        ]);
+
+        // Simpan ke session (termasuk ID untuk halaman hasil)
+        session([
+            'diagnosis_id'    => $session->id,
+            'total_skor'      => $hasil['risk_index'],
+            'jawaban'         => $jawaban,
+            'aspek_psikologi' => $hasil['aspek'],
+            'kategori_risiko' => $hasil['kategori'],
+            'edas'            => $hasil['edas'],
+            'aiRekomendasi'   => $aiRekomendasi,
+            'waktu'           => now(),
         ]);
 
         return redirect()->route('diagnosis.hasil');
     }
 
+    // ============================================================
+    // TAMPILKAN HASIL (dari session)
+    // ============================================================
     public function hasil()
     {
-        $total = session('total_skor');
-        $jawaban = session('jawaban');
-        $waktu = session('waktu');
+        $total          = session('total_skor');
+        $jawaban        = session('jawaban');
+        $waktu          = session('waktu');
+        $aspekPsikologi = session('aspek_psikologi');
+        $kategoriRisiko = session('kategori_risiko');
+        $edas           = session('edas');
+        $aiRekomendasi  = session('aiRekomendasi');
 
         if ($total === null || !$jawaban) {
             return redirect()->route('diagnosis.form');
         }
 
-        $aspekPsikologi = session('aspek_psikologi');
-        $kategoriRisiko = session('kategori_risiko');
-        $edas = session('edas');
-
-        // Compose data for Gemini
-        $aiData = [
-            'total_skor' => $total,
-            'jawaban' => $jawaban,
-            'aspek_psikologi' => $aspekPsikologi,
-            'kategori_risiko' => $kategoriRisiko,
-            'edas' => $edas,
-        ];
-        $aiRekomendasi = GeminiAIHelper::getRecommendation($aiData);
-
         return view('user.hasildiagnosis', [
-            'jawaban' => $jawaban,
-            'total' => $total,
+            'jawaban'        => $jawaban,
+            'total'          => $total,
             'aspekPsikologi' => $aspekPsikologi,
             'kategoriRisiko' => $kategoriRisiko,
-            'edas' => $edas,
-            'waktu' => $waktu,
-            'aiRekomendasi' => $aiRekomendasi,
+            'edas'           => $edas,
+            'waktu'          => $waktu,
+            'aiRekomendasi'  => $aiRekomendasi,
+        ]);
+    }
+
+    // ============================================================
+    // TAMPILKAN DETAIL RIWAYAT (dari database, bukan session)
+    // Dipakai di halaman riwayat ketika klik salah satu riwayat
+    // ============================================================
+    public function detail($id)
+    {
+        // Ambil dari DB, pastikan milik user yang login
+        $session = DiagnosisSession::where('id', $id)
+            ->where('user_id', auth()->id())
+            ->firstOrFail();
+
+        return view('user.hasildiagnosis', [
+            'jawaban'        => $session->jawaban,
+            'total'          => $session->risk_index,
+            'aspekPsikologi' => $session->aspek_psikologi,
+            'kategoriRisiko' => $session->kategori_risiko,
+            'edas'           => $session->edas_result,
+            'waktu'          => $session->created_at,
+            'aiRekomendasi'  => $session->rekomendasi_ai,
         ]);
     }
 
@@ -80,62 +136,65 @@ class DiagnosisController extends Controller
         return "Export PDF ID: " . $id;
     }
 
+    // ============================================================
+    // HITUNG OCEAN + EDAS (tidak berubah dari versi lama)
+    // ============================================================
     private function hitungEdasOcean(array $jawaban): array
     {
         $aspek = [
             'openness' => [
-                'label' => 'Openness',
-                'items' => [
+                'label'     => 'Openness',
+                'items'     => [
                     ['index' => 4, 'reverse' => false],
                     ['index' => 9, 'reverse' => true],
                 ],
-                'bobot' => 0.15,
-                'warna' => '#0ea5e9',
-                'kode' => 'O',
+                'bobot'     => 0.15,
+                'warna'     => '#0ea5e9',
+                'kode'      => 'O',
                 'deskripsi' => 'Keterbukaan terhadap pengalaman dan ide baru.',
             ],
             'conscientiousness' => [
-                'label' => 'Conscientiousness',
-                'items' => [
+                'label'     => 'Conscientiousness',
+                'items'     => [
                     ['index' => 2, 'reverse' => false],
                     ['index' => 7, 'reverse' => true],
                 ],
-                'bobot' => 0.25,
-                'warna' => '#ef4444',
-                'kode' => 'C',
+                'bobot'     => 0.25,
+                'warna'     => '#ef4444',
+                'kode'      => 'C',
                 'deskripsi' => 'Kedisiplinan, keteraturan, dan kontrol diri.',
             ],
             'extraversion' => [
-                'label' => 'Extraversion',
-                'items' => [
+                'label'     => 'Extraversion',
+                'items'     => [
                     ['index' => 0, 'reverse' => false],
                     ['index' => 5, 'reverse' => true],
                 ],
-                'bobot' => 0.20,
-                'warna' => '#eab308',
-                'kode' => 'E',
+                'bobot'     => 0.20,
+                'warna'     => '#eab308',
+                'kode'      => 'E',
                 'deskripsi' => 'Energi sosial dan kecenderungan berinteraksi.',
             ],
             'agreeableness' => [
-                'label' => 'Agreeableness',
-                'items' => [
+                'label'     => 'Agreeableness',
+                'items'     => [
                     ['index' => 6, 'reverse' => false],
                     ['index' => 1, 'reverse' => true],
                 ],
-                'bobot' => 0.15,
-                'warna' => '#22c55e',
-                'kode' => 'A',
+                'bobot'     => 0.15,
+                'warna'     => '#22c55e',
+                'kode'      => 'A',
                 'deskripsi' => 'Kooperatif, empatik, dan mudah bekerja sama.',
             ],
             'neuroticism' => [
-                'label' => 'Neuroticism',
-                'items' => [
+                'label'     => 'Neuroticism',
+                'items'     => [
                     ['index' => 3, 'reverse' => false],
                     ['index' => 8, 'reverse' => true],
                 ],
-                'bobot' => 0.25,
-                'warna' => '#a855f7',
-                'kode' => 'N',
+                'bobot'     => 0.25,
+                'warna'     => '#a855f7',
+                'kode'      => 'N',
                 'deskripsi' => 'Kerentanan terhadap cemas, tegang, dan emosi negatif.',
             ],
         ];
@@ -149,18 +208,18 @@ class DiagnosisController extends Controller
             $min = count($data['items']);
             $max = count($data['items']) * 5;
 
-            $aspek[$key]['skor'] = $raw;
+            $aspek[$key]['skor']   = $raw;
             $aspek[$key]['persen'] = round((($raw - $min) / ($max - $min)) * 100);
         }
 
         $riskIndex = $this->hitungIndeksRisikoOcean($aspek);
-        $edas = $this->prosesEdas($aspek);
+        $edas      = $this->prosesEdas($aspek);
 
         return [
             'risk_index' => $riskIndex,
-            'kategori' => $edas['terbaik']['label'],
-            'aspek' => $aspek,
-            'edas' => $edas,
+            'kategori'   => $edas['terbaik']['label'],
+            'aspek'      => $aspek,
+            'edas'       => $edas,
         ];
     }
 
@@ -168,33 +227,33 @@ class DiagnosisController extends Controller
     {
         $profilPakar = [
             'rendah' => [
-                'label' => 'RISIKO RENDAH',
+                'label'  => 'RISIKO RENDAH',
                 'target' => [
-                    'openness' => 65,
+                    'openness'          => 65,
                     'conscientiousness' => 80,
-                    'extraversion' => 65,
-                    'agreeableness' => 70,
-                    'neuroticism' => 20,
+                    'extraversion'      => 65,
+                    'agreeableness'     => 70,
+                    'neuroticism'       => 20,
                 ],
             ],
             'sedang' => [
-                'label' => 'RISIKO SEDANG',
+                'label'  => 'RISIKO SEDANG',
                 'target' => [
-                    'openness' => 55,
+                    'openness'          => 55,
                     'conscientiousness' => 55,
-                    'extraversion' => 50,
-                    'agreeableness' => 55,
-                    'neuroticism' => 55,
+                    'extraversion'      => 50,
+                    'agreeableness'     => 55,
+                    'neuroticism'       => 55,
                 ],
             ],
             'tinggi' => [
-                'label' => 'RISIKO TINGGI',
+                'label'  => 'RISIKO TINGGI',
                 'target' => [
-                    'openness' => 40,
+                    'openness'          => 40,
                     'conscientiousness' => 25,
-                    'extraversion' => 35,
-                    'agreeableness' => 35,
-                    'neuroticism' => 85,
+                    'extraversion'      => 35,
+                    'agreeableness'     => 35,
+                    'neuroticism'       => 85,
                 ],
             ],
         ];
@@ -209,8 +268,8 @@ class DiagnosisController extends Controller
 
         $average = [];
         foreach (array_keys($aspek) as $kodeKriteria) {
-            $nilaiKriteria = array_column($matrix, $kodeKriteria);
-            $average[$kodeKriteria] = array_sum($nilaiKriteria) / count($nilaiKriteria);
+            $nilaiKriteria           = array_column($matrix, $kodeKriteria);
+            $average[$kodeKriteria]  = array_sum($nilaiKriteria) / count($nilaiKriteria);
         }
 
         $ranking = [];
@@ -219,7 +278,7 @@ class DiagnosisController extends Controller
             $sn = 0;
 
             foreach ($nilaiAlternatif as $kodeKriteria => $nilai) {
-                $avg = max($average[$kodeKriteria], 0.0001);
+                $avg   = max($average[$kodeKriteria], 0.0001);
                 $bobot = $aspek[$kodeKriteria]['bobot'];
 
                 $pda = max(0, ($nilai - $avg) / $avg);
@@ -230,10 +289,10 @@ class DiagnosisController extends Controller
             }
 
             $ranking[$kodeAlternatif] = [
-                'label' => $profilPakar[$kodeAlternatif]['label'],
+                'label'  => $profilPakar[$kodeAlternatif]['label'],
                 'target' => $profilPakar[$kodeAlternatif]['target'],
-                'sp' => $sp,
-                'sn' => $sn,
+                'sp'     => $sp,
+                'sn'     => $sn,
             ];
         }
 
@@ -244,9 +303,9 @@ class DiagnosisController extends Controller
             $nsp = $data['sp'] / $maxSp;
             $nsn = 1 - ($data['sn'] / $maxSn);
 
-            $ranking[$kodeAlternatif]['nsp'] = $nsp;
-            $ranking[$kodeAlternatif]['nsn'] = $nsn;
-            $ranking[$kodeAlternatif]['as'] = ($nsp + $nsn) / 2;
+            $ranking[$kodeAlternatif]['nsp']  = $nsp;
+            $ranking[$kodeAlternatif]['nsn']  = $nsn;
+            $ranking[$kodeAlternatif]['as']   = ($nsp + $nsn) / 2;
             $ranking[$kodeAlternatif]['skor'] = round($ranking[$kodeAlternatif]['as'] * 100, 2);
         }
 
@@ -254,9 +313,9 @@ class DiagnosisController extends Controller
 
         return [
             'average_solution' => $average,
-            'matrix' => $matrix,
-            'ranking' => $ranking,
-            'terbaik' => reset($ranking),
+            'matrix'           => $matrix,
+            'ranking'          => $ranking,
+            'terbaik'          => reset($ranking),
         ];
     }
 
@@ -264,10 +323,10 @@ class DiagnosisController extends Controller
     {
         $risk = (
             (100 - $aspek['conscientiousness']['persen']) * 0.25 +
-            (100 - $aspek['extraversion']['persen']) * 0.15 +
-            (100 - $aspek['agreeableness']['persen']) * 0.10 +
-            (100 - $aspek['openness']['persen']) * 0.05 +
-            $aspek['neuroticism']['persen'] * 0.45
+            (100 - $aspek['extraversion']['persen'])      * 0.15 +
+            (100 - $aspek['agreeableness']['persen'])     * 0.10 +
+            (100 - $aspek['openness']['persen'])          * 0.05 +
+            $aspek['neuroticism']['persen']               * 0.45
         );
 
         return (int) round($risk);
