@@ -229,6 +229,18 @@
                 <input type="text" name="nim" class="form-control" value="{{ old('nim') }}">
                 <i class="bi bi-person icon-left"></i>
             </div>
+
+            <label class="input-group-label">Program Studi</label>
+            <div class="input-group-custom">
+                <input type="text" name="jurusan" class="form-control @error('jurusan') is-invalid @enderror" value="{{ old('jurusan') }}" placeholder="Program Studi Anda" required>
+                <i class="bi bi-mortarboard icon-left"></i>
+            </div>
+
+            <label class="input-group-label">Angkatan</label>
+            <div class="input-group-custom">
+                <input type="text" name="angkatan" class="form-control @error('angkatan') is-invalid @enderror" value="{{ old('angkatan') }}" placeholder="Contoh: 2022" required>
+                <i class="bi bi-calendar-event icon-left"></i>
+            </div>
             
             <label class="input-group-label">Email</label>
             <div class="input-group-custom">

@@ -14,10 +14,15 @@ class GeminiAIHelper
      */
     public static function getRecommendation(array $data): ?string
     {
-        $apiKey = env('GEMINI_API_KEY');
-        $url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=' . $apiKey;
+        try {
+            $apiKey = env('GEMINI_API_KEY');
+            if (empty($apiKey)) {
+                return null;
+            }
+            
+            $url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=' . $apiKey;
 
-        $prompt = "Anda adalah asisten Explainable AI (XAI) di bidang psikologi klinis dan akademik. 
+            $prompt = "Anda adalah asisten Explainable AI (XAI) di bidang psikologi klinis dan akademik. 
 Tugas Anda adalah menganalisis data kepribadian OCEAN dan perhitungan model SPK EDAS berikut:
 " . json_encode($data) . "
 
@@ -28,19 +33,22 @@ Format output Anda harus menggunakan struktur Markdown berikut secara rapi:
 2. **Faktor Pemicu Utama (Key Triggers)**: Detail 1-2 faktor psikologis utama dari hasil tes mereka yang paling memicu kerentanan terhadap burnout.
 3. **Rekomendasi Tindakan Personalisasi (Actionable Advice)**: Berikan 3 langkah praktis spesifik (misal teknik manajemen stres, penyesuaian belajar, atau istirahat) yang paling cocok dengan tipe kepribadian OCEAN mereka untuk menekan risiko burnout.";
 
-        $response = Http::post($url, [
-            'contents' => [
-                [
-                    'parts' => [
-                        ['text' => $prompt]
+            $response = Http::timeout(5)->post($url, [
+                'contents' => [
+                    [
+                        'parts' => [
+                            ['text' => $prompt]
+                        ]
                     ]
                 ]
-            ]
-        ]);
+            ]);
 
-        if ($response->successful()) {
-            $result = $response->json();
-            return $result['candidates'][0]['content']['parts'][0]['text'] ?? null;
+            if ($response->successful()) {
+                $result = $response->json();
+                return $result['candidates'][0]['content']['parts'][0]['text'] ?? null;
+            }
+        } catch (\Exception $e) {
+            \Log::error('Gemini API Error: ' . $e->getMessage());
         }
         return null;
     }

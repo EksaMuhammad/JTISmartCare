@@ -832,7 +832,7 @@
                     </tr>
                     <tr>
                         <td style="padding:7px 14px; color:#64748b; font-size:11px;">Program Studi</td>
-                        <td style="padding:7px 14px; font-weight:600; color:#1d4ed8;">: {{ Auth::user()->prodi ?? '-' }}</td>
+                        <td style="padding:7px 14px; font-weight:600; color:#1d4ed8;">: {{ Auth::user()->jurusan ?? '-' }}</td>
                         <td style="padding:7px 14px; color:#64748b; font-size:11px;">Waktu Selesai</td>
                         <td style="padding:7px 14px; font-weight:600;">: {{ \Carbon\Carbon::parse($waktu)->format('H.i') }} WIB</td>
                     </tr>
