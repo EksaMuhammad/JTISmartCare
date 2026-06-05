@@ -12,16 +12,14 @@ class DashboardController extends Controller
     {
         $user = auth()->user();
 
-        // Dashboard mahasiswa pertama login
-        if (!$user->is_completed) {
-
+        // Dashboard mahasiswa pertama login (jika belum pernah mengisi kuesioner)
+        if (!$user->diagnosisSessions()->exists()) {
             return view('dashboard.first-dashboard', compact('user'));
         }
 
-        // Data sementara agar view tidak error
-        $latestDiagnosis = null;
-        $totalDiagnosis = 0;
-        $riwayat = [];
+        $latestDiagnosis = $user->diagnosisSessions()->latest()->first();
+        $totalDiagnosis = $user->diagnosisSessions()->count();
+        $riwayat = $user->diagnosisSessions()->latest()->take(5)->get();
         $articles = [];
 
         return view('dashboard.index', compact(
@@ -36,23 +34,23 @@ class DashboardController extends Controller
     // ===== DASHBOARD ADMIN =====
     public function admin()
     {
-        // Semua data diagnosis
-        $data = Diagnosis::latest()->get();
+        // Semua data diagnosis dari sesi diagnosis
+        $data = DiagnosisSession::with('user')->latest()->get();
 
-        // Total mahasiswa
-        $totalMahasiswa = User::where('role', 'user')->count();
+        // Total mahasiswa (dengan role 'mahasiswa')
+        $totalMahasiswa = User::where('role', 'mahasiswa')->count();
 
         // Total diagnosis
-        $totalDiagnosis = Diagnosis::count();
+        $totalDiagnosis = DiagnosisSession::count();
 
         // Burnout tinggi
-        $burnoutTinggi = Diagnosis::where(
-            'tingkat_burnout',
-            'Tinggi'
+        $burnoutTinggi = DiagnosisSession::where(
+            'kategori_risiko',
+            'RISIKO TINGGI'
         )->count();
 
-        // Rata-rata skor
-        $rataRata = Diagnosis::avg('hasil') ?? 0;
+        // Rata-rata skor (risk_index) diubah ke skala 10
+        $rataRata = DiagnosisSession::avg('risk_index') / 10 ?? 0;
 
         return view('admin.dashboard', compact(
             'totalMahasiswa',

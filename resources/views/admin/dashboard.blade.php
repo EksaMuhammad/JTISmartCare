@@ -160,6 +160,12 @@
 {{-- KONDISI ADA DATA --}}
 {{-- ========================= --}}
 @if($data->count() > 0)
+@php
+    $totalCount = $data->count() ?: 1;
+    $tinggiCount = $data->filter(fn($item) => in_array($item->kategori_risiko, ['RISIKO TINGGI', 'Tinggi']))->count();
+    $sedangCount = $data->filter(fn($item) => in_array($item->kategori_risiko, ['RISIKO SEDANG', 'Sedang']))->count();
+    $ringanCount = $data->filter(fn($item) => in_array($item->kategori_risiko, ['RISIKO RENDAH', 'Rendah', 'Ringan']))->count();
+@endphp
 
 <div class="row g-4 mb-4">
 
@@ -177,12 +183,12 @@
                 <div>
                     <div class="d-flex justify-content-between mb-1">
                         <span class="fw-semibold text-danger">Tinggi</span>
-                        <span>{{ $burnoutTinggi }}</span>
+                        <span>{{ $tinggiCount }}</span>
                     </div>
 
                     <div class="progress" style="height: 10px; border-radius: 20px;">
                         <div class="progress-bar bg-danger"
-                            style="width: 70%">
+                            style="width: {{ ($tinggiCount / $totalCount) * 100 }}%">
                         </div>
                     </div>
                 </div>
@@ -190,12 +196,12 @@
                 <div>
                     <div class="d-flex justify-content-between mb-1">
                         <span class="fw-semibold text-warning">Sedang</span>
-                        <span>0</span>
+                        <span>{{ $sedangCount }}</span>
                     </div>
 
                     <div class="progress" style="height: 10px; border-radius: 20px;">
                         <div class="progress-bar bg-warning"
-                            style="width: 40%">
+                            style="width: {{ ($sedangCount / $totalCount) * 100 }}%">
                         </div>
                     </div>
                 </div>
@@ -203,12 +209,12 @@
                 <div>
                     <div class="d-flex justify-content-between mb-1">
                         <span class="fw-semibold text-success">Ringan</span>
-                        <span>0</span>
+                        <span>{{ $ringanCount }}</span>
                     </div>
 
                     <div class="progress" style="height: 10px; border-radius: 20px;">
                         <div class="progress-bar bg-success"
-                            style="width: 20%">
+                            style="width: {{ ($ringanCount / $totalCount) * 100 }}%">
                         </div>
                     </div>
                 </div>
@@ -256,18 +262,18 @@
                         <tr>
 
                             <td class="fw-semibold">
-                                {{ $item->nama }}
+                                {{ $item->user->name ?? $item->nama }}
                             </td>
 
                             <td>
 
-                                @if($item->tingkat_burnout == 'Tinggi')
+                                @if(in_array($item->kategori_risiko, ['RISIKO TINGGI', 'Tinggi']))
 
                                     <span class="badge rounded-pill bg-danger">
                                         Tinggi
                                     </span>
 
-                                @elseif($item->tingkat_burnout == 'Sedang')
+                                @elseif(in_array($item->kategori_risiko, ['RISIKO SEDANG', 'Sedang']))
 
                                     <span class="badge rounded-pill bg-warning text-dark">
                                         Sedang
@@ -284,7 +290,7 @@
                             </td>
 
                             <td>
-                                {{ $item->hasil }}
+                                {{ $item->risk_index }}%
                             </td>
 
                             <td class="text-muted">

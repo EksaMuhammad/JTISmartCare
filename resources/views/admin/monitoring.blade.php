@@ -135,30 +135,30 @@
                         <!-- Nama -->
                         <td>
                             <div class="fw-semibold">
-                                {{ $item->nama }}
+                                {{ $item->user->name ?? $item->nama }}
                             </div>
                         </td>
 
                         <!-- NIM -->
                         <td class="text-muted">
-                            {{ $item->nim }}
+                            {{ $item->user->nim ?? $item->nim }}
                         </td>
 
                         <!-- Jurusan -->
                         <td class="text-muted">
-                            {{ $item->jurusan }}
+                            {{ $item->user->jurusan ?? $item->jurusan }}
                         </td>
 
                         <!-- Tingkat Burnout -->
                         <td>
 
-                            @if($item->tingkat_burnout == 'Tinggi')
+                            @if(in_array($item->kategori_risiko, ['RISIKO TINGGI', 'Tinggi']))
                                 <span class="badge rounded-pill px-3 py-2"
                                     style="background: #FEE2E2; color: #DC2626;">
                                     Tinggi
                                 </span>
 
-                            @elseif($item->tingkat_burnout == 'Sedang')
+                            @elseif(in_array($item->kategori_risiko, ['RISIKO SEDANG', 'Sedang']))
                                 <span class="badge rounded-pill px-3 py-2"
                                     style="background: #FEF3C7; color: #D97706;">
                                     Sedang
@@ -179,7 +179,7 @@
                             <div class="d-flex align-items-center gap-2">
 
                                 <span style="font-size: 13px;">
-                                    {{ $item->hasil }}
+                                    {{ $item->risk_index }}%
                                 </span>
 
                                 <div style="
@@ -191,11 +191,11 @@
                                 ">
 
                                     <div style="
-                                        width: {{ $item->hasil * 100 }}%;
+                                        width: {{ $item->risk_index }}%;
                                         height: 100%;
                                         background:
-                                            {{ $item->hasil >= 0.7 ? '#DC2626' :
-                                            ($item->hasil >= 0.4 ? '#F59E0B' : '#16A34A') }};
+                                            {{ $item->risk_index >= 70 ? '#DC2626' :
+                                            ($item->risk_index >= 40 ? '#F59E0B' : '#16A34A') }};
                                     "></div>
 
                                 </div>
