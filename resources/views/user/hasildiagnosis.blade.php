@@ -4,16 +4,35 @@
 
 @php
     $namaVariabel = [
-        0  => ['label' => 'Mudah bergaul dan energik', 'dim' => 'E'],
-        1  => ['label' => 'Kritis dan mudah mencari kesalahan', 'dim' => 'A'],
-        2  => ['label' => 'Dapat diandalkan dan teratur', 'dim' => 'C'],
-        3  => ['label' => 'Mudah cemas atau tegang', 'dim' => 'N'],
-        4  => ['label' => 'Terbuka pada ide baru', 'dim' => 'O'],
-        5  => ['label' => 'Pendiam dan menjaga jarak', 'dim' => 'E'],
-        6  => ['label' => 'Empatik dan membantu orang lain', 'dim' => 'A'],
-        7  => ['label' => 'Kurang teratur dan menunda pekerjaan', 'dim' => 'C'],
-        8  => ['label' => 'Tenang dan mampu mengendalikan stres', 'dim' => 'N'],
-        9  => ['label' => 'Kurang tertarik mencoba hal baru', 'dim' => 'O'],
+        // EXTRAVERSION (4 items: 0-3)
+        0  => ['label' => 'Aktif dalam diskusi teknis dan presentasi', 'dim' => 'E'],
+        1  => ['label' => 'Lebih suka bekerja sendiri daripada kolaborasi', 'dim' => 'E', 'reverse' => true],
+        2  => ['label' => 'Senang mengikuti komunitas tech dan hackathon', 'dim' => 'E'],
+        3  => ['label' => 'Tidak nyaman menjadi leader dalam project', 'dim' => 'E', 'reverse' => true],
+        
+        // AGREEABLENESS (4 items: 4-7)
+        4  => ['label' => 'Mudah membantu teman debugging dan penjelasan teknis', 'dim' => 'A'],
+        5  => ['label' => 'Tidak peduli dengan masalah teman dalam project', 'dim' => 'A', 'reverse' => true],
+        6  => ['label' => 'Berempati dan support saat teman struggle deadline', 'dim' => 'A'],
+        7  => ['label' => 'Tidak tertarik dengan masalah teman sekelas', 'dim' => 'A', 'reverse' => true],
+        
+        // CONSCIENTIOUSNESS (4 items: 8-11)
+        8  => ['label' => 'Menyelesaikan assignment tepat waktu dengan kualitas baik', 'dim' => 'C'],
+        9  => ['label' => 'Sering menunda pekerjaan coding sampai last minute', 'dim' => 'C', 'reverse' => true],
+        10 => ['label' => 'Terorganisir dalam mengelola project dan version control', 'dim' => 'C'],
+        11 => ['label' => 'Berantakan dalam menyimpan dan mendokumentasikan files', 'dim' => 'C', 'reverse' => true],
+        
+        // NEUROTICISM (4 items: 12-15)
+        12 => ['label' => 'Mudah cemas dengan deadline project dan exam teknis', 'dim' => 'N'],
+        13 => ['label' => 'Tenang meski hadapi bug kompleks atau masalah teknis', 'dim' => 'N', 'reverse' => true],
+        14 => ['label' => 'Khawatir jika nilai/performance tidak sesuai ekspektasi', 'dim' => 'N'],
+        15 => ['label' => 'Jarang tertekan meski mengerjakan project kompleks', 'dim' => 'N', 'reverse' => true],
+        
+        // OPENNESS (4 items: 16-19)
+        16 => ['label' => 'Tertarik belajar programming language dan teknologi baru', 'dim' => 'O'],
+        17 => ['label' => 'Lebih suka gunakan bahasa/tools yang sudah familiar', 'dim' => 'O', 'reverse' => true],
+        18 => ['label' => 'Punya imajinasi tinggi dalam design algorithm/architecture', 'dim' => 'O'],
+        19 => ['label' => 'Cepat belajar konsep teknis yang kompleks', 'dim' => 'O'],
     ];
 
     $dimColor = [
@@ -24,14 +43,14 @@
         'N' => ['bg' => '#a855f7', 'text' => '#a855f7', 'badge' => 'badge-dep', 'label' => 'Neuroticism'],
     ];
 
-    $jawaban = $jawaban ?? array_fill(0, 10, 1);
+    $jawaban = $jawaban ?? array_fill(0, 20, 1);
 
     $aspekPsikologi = $aspekPsikologi ?? [
-        'openness' => ['label' => 'Openness', 'items' => [4, 9], 'bobot' => 0.15, 'warna' => '#0ea5e9', 'kode' => 'O'],
-        'conscientiousness' => ['label' => 'Conscientiousness', 'items' => [2, 7], 'bobot' => 0.25, 'warna' => '#ef4444', 'kode' => 'C'],
-        'extraversion' => ['label' => 'Extraversion', 'items' => [0, 5], 'bobot' => 0.20, 'warna' => '#eab308', 'kode' => 'E'],
-        'agreeableness' => ['label' => 'Agreeableness', 'items' => [1, 6], 'bobot' => 0.15, 'warna' => '#22c55e', 'kode' => 'A'],
-        'neuroticism' => ['label' => 'Neuroticism', 'items' => [3, 8], 'bobot' => 0.25, 'warna' => '#a855f7', 'kode' => 'N'],
+        'openness' => ['label' => 'Openness', 'items' => [16, 17, 18, 19], 'bobot' => 0.15, 'warna' => '#0ea5e9', 'kode' => 'O'],
+        'conscientiousness' => ['label' => 'Conscientiousness', 'items' => [8, 9, 10, 11], 'bobot' => 0.25, 'warna' => '#ef4444', 'kode' => 'C'],
+        'extraversion' => ['label' => 'Extraversion', 'items' => [0, 1, 2, 3], 'bobot' => 0.20, 'warna' => '#eab308', 'kode' => 'E'],
+        'agreeableness' => ['label' => 'Agreeableness', 'items' => [4, 5, 6, 7], 'bobot' => 0.15, 'warna' => '#22c55e', 'kode' => 'A'],
+        'neuroticism' => ['label' => 'Neuroticism', 'items' => [12, 13, 14, 15], 'bobot' => 0.25, 'warna' => '#a855f7', 'kode' => 'N'],
     ];
 
     $defaultWarna = [
@@ -57,7 +76,15 @@
             $aspekPsikologi[$key]['kode'] = $defaultKode[$key] ?? strtoupper(substr($key, 0, 1));
         }
         if (!isset($aspekPsikologi[$key]['persen'])) {
-            $raw = array_sum(array_map(fn($index) => $jawaban[$index] ?? 1, $data['items']));
+            $raw = 0;
+            foreach ($data['items'] as $index) {
+                $skor = $jawaban[$index] ?? 1;
+                // Handle reverse scoring
+                if (!empty($namaVariabel[$index]['reverse'])) {
+                    $skor = 6 - $skor; // Reverse: 1->5, 2->4, 3->3, 4->2, 5->1
+                }
+                $raw += $skor;
+            }
             $min = count($data['items']);
             $max = count($data['items']) * 5;
             $aspekPsikologi[$key]['skor'] = $raw;
@@ -96,6 +123,34 @@
     $tglDiagnosis = \Carbon\Carbon::parse($waktu)
         ->locale('id')
         ->isoFormat('D MMMM YYYY, HH:mm') . ' WIB';
+
+    // Gunakan rekomendasi yang dikirimkan dari Controller (sudah diproses & disimpan di DB)
+    $aiRekomendasi = $aiRekomendasi ?? null;
+
+    // Konversi markdown dari Gemini AI ke HTML sederhana
+    $aiRekomendasiHtml = null;
+    if (!empty($aiRekomendasi) && $aiRekomendasi !== '-') {
+        $md = e($aiRekomendasi); // escape dulu untuk keamanan
+        // Bold: **teks** → <strong>teks</strong>
+        $md = preg_replace('/\*\*(.+?)\*\*/s', '<strong>$1</strong>', $md);
+        // Italic: *teks* → <em>teks</em>
+        $md = preg_replace('/\*(.+?)\*/s', '<em>$1</em>', $md);
+        // Heading H1-H3
+        $md = preg_replace('/^### (.+)$/m', '<h4 style="margin:12px 0 4px;color:#1e3a5f;font-size:13px;">$1</h4>', $md);
+        $md = preg_replace('/^## (.+)$/m', '<h3 style="margin:14px 0 4px;color:#1e3a5f;font-size:14px;">$1</h3>', $md);
+        $md = preg_replace('/^# (.+)$/m', '<h3 style="margin:14px 0 4px;color:#1e3a5f;font-size:15px;font-weight:700;">$1</h3>', $md);
+        // Numbered list: "1. item"
+        $md = preg_replace('/^\d+\. (.+)$/m', '<li style="margin-bottom:4px;">$1</li>', $md);
+        // Bullet list: "- item" or "* item"
+        $md = preg_replace('/^[\-\*] (.+)$/m', '<li style="margin-bottom:4px;">$1</li>', $md);
+        // Wrap consecutive <li> in <ul>
+        $md = preg_replace('/(<li[^>]*>.*?<\/li>(\s*<li[^>]*>.*?<\/li>)*)/s', '<ul style="padding-left:18px;margin:6px 0;">$1</ul>', $md);
+        // Newlines → <br>
+        $md = nl2br($md);
+        // Remove double <br> after block elements
+        $md = preg_replace('/(<\/h[1-6]>|<\/ul>|<\/li>)\s*(<br\s*\/?>)+/i', '$1', $md);
+        $aiRekomendasiHtml = $md;
+    }
 @endphp
 
 <style>
@@ -181,217 +236,431 @@
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    margin-bottom: 18px;
+    margin-bottom: 24px;
+    gap: 16px;
 }
 .page-header-bar .title-block h4 {
-    font-size: 22px;
-    font-weight: 700;
-    color: #1e293b;
-    margin: 0;
+    font-size: 24px;
+    font-weight: 800;
+    color: #0f172a;
+    margin: 0 0 4px;
 }
 .page-header-bar .title-block small {
-    color: #94a3b8;
+    color: #64748b;
     font-size: 12px;
 }
-.page-actions { display: flex; gap: 8px; }
+.page-actions { display: flex; gap: 10px; }
 .btn-action {
-    display: flex; align-items: center; gap: 6px;
-    padding: 7px 14px;
-    border-radius: 7px;
-    font-size: 12.5px;
-    font-weight: 600;
+    display: flex; align-items: center; gap: 7px;
+    padding: 9px 16px;
+    border-radius: 9px;
+    font-size: 12px;
+    font-weight: 700;
     border: none;
     cursor: pointer;
     text-decoration: none;
-    transition: all .15s;
+    transition: all .2s;
+    white-space: nowrap;
 }
-.btn-history   { background: #f8fafc; border: 1px solid #e2e8f0; color: #475569; }
-.btn-pdf       { background: #16a34a; color: white; }
-.btn-ulang     { background: #1d4ed8; color: white; }
-.btn-action:hover { opacity: .85; }
+.btn-history   { background: #f8fafc; border: 2px solid #e2e8f0; color: #475569; }
+.btn-history:hover { background: #f1f5f9; border-color: #cbd5e1; }
+.btn-pdf       { background: linear-gradient(135deg, #16a34a 0%, #15803d 100%); color: white; box-shadow: 0 4px 12px rgba(22,163,74,.2); }
+.btn-pdf:hover { box-shadow: 0 6px 16px rgba(22,163,74,.3); }
+.btn-ulang     { background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); color: white; box-shadow: 0 4px 12px rgba(37,99,235,.2); }
+.btn-ulang:hover { box-shadow: 0 6px 16px rgba(37,99,235,.3); }
 
 /* ===================== SUMMARY CARD ===================== */
 .summary-card {
-    border-radius: 14px;
-    background: linear-gradient(135deg, #1e3a5f 0%, #274e7a 100%);
-    padding: 22px 28px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #1e40af 100%);
+    padding: 28px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
-    box-shadow: 0 4px 18px rgba(30,58,95,.18);
+    margin-bottom: 24px;
+    box-shadow: 0 8px 24px rgba(15,23,42,.2);
+    border: 1px solid rgba(255,255,255,.1);
 }
-.summary-left { display: flex; align-items: center; gap: 20px; }
+.summary-left { display: flex; align-items: center; gap: 24px; }
 
 /* Score circle */
 .score-ring {
     position: relative;
-    width: 90px; height: 90px;
+    width: 100px; height: 100px;
+    flex-shrink: 0;
 }
 .score-ring svg { transform: rotate(-90deg); }
-.score-ring .ring-bg    { fill: none; stroke: rgba(255,255,255,.15); stroke-width: 6; }
+.score-ring .ring-bg    { fill: none; stroke: rgba(255,255,255,.1); stroke-width: 6; }
 .score-ring .ring-fill  { fill: none; stroke: #60a5fa; stroke-width: 6;
-    stroke-linecap: round; transition: stroke-dashoffset .6s ease; }
+    stroke-linecap: round; transition: stroke-dashoffset .8s ease; }
 .score-ring .center-text {
     position: absolute; inset: 0;
     display: flex; flex-direction: column;
     align-items: center; justify-content: center;
 }
-.score-ring .center-text .num  { font-size: 22px; font-weight: 800; color: white; line-height: 1; }
-.score-ring .center-text .den  { font-size: 10px; color: rgba(255,255,255,.6); }
+.score-ring .center-text .num  { font-size: 26px; font-weight: 800; color: white; line-height: 1; }
+.score-ring .center-text .den  { font-size: 11px; color: rgba(255,255,255,.6); margin-top: 2px; }
 
 .summary-info {}
 .summary-info .badge-risiko {
-    display: inline-flex; align-items: center; gap: 5px;
-    padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700;
-    margin-bottom: 6px;
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 12px; border-radius: 24px; font-size: 12px; font-weight: 700;
+    margin-bottom: 8px;
 }
-.badge-risiko-tinggi { background: rgba(239,68,68,.2); color: #fca5a5; border: 1px solid rgba(239,68,68,.3); }
-.badge-risiko-sedang { background: rgba(234,179,8,.2); color: #fde68a; border: 1px solid rgba(234,179,8,.3); }
-.badge-risiko-rendah { background: rgba(34,197,94,.2); color: #86efac; border: 1px solid rgba(34,197,94,.3); }
-.summary-info h5 { color: white; font-weight: 700; font-size: 16px; margin: 0 0 3px; }
-.summary-info .diag-date { color: rgba(255,255,255,.5); font-size: 11px; }
+.badge-risiko-tinggi { background: rgba(239,68,68,.25); color: #fca5a5; border: 1px solid rgba(239,68,68,.4); }
+.badge-risiko-sedang { background: rgba(234,179,8,.25); color: #fde68a; border: 1px solid rgba(234,179,8,.4); }
+.badge-risiko-rendah { background: rgba(34,197,94,.25); color: #86efac; border: 1px solid rgba(34,197,94,.4); }
+.summary-info h5 { color: white; font-weight: 700; font-size: 18px; margin: 0 0 4px; }
+.summary-info .diag-date { color: rgba(255,255,255,.5); font-size: 12px; }
 
 .summary-right { text-align: right; }
 .summary-right .dim-row {
     display: flex; justify-content: flex-end; align-items: center;
-    gap: 8px; margin-bottom: 4px; font-size: 12.5px;
+    gap: 10px; margin-bottom: 6px; font-size: 13px;
 }
 .summary-right .dim-label { color: rgba(255,255,255,.6); }
-.summary-right .dim-val   { color: white; font-weight: 600; min-width: 32px; text-align: right; }
-.summary-right .dim-dot   { width: 8px; height: 8px; border-radius: 50%; }
-.summary-right .user-line { color: rgba(255,255,255,.45); font-size: 11px; margin-top: 6px; }
+.summary-right .dim-val   { color: white; font-weight: 700; min-width: 36px; text-align: right; }
+.summary-right .dim-dot   { width: 9px; height: 9px; border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,.2); }
+.summary-right .user-line { color: rgba(255,255,255,.45); font-size: 12px; margin-top: 8px; }
 
 /* ===================== GRID CARDS ===================== */
-.diag-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+.diag-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 18px; }
 .diag-card {
     background: white;
-    border-radius: 12px;
-    padding: 20px;
-    box-shadow: 0 1px 6px rgba(0,0,0,.06);
+    border-radius: 14px;
+    padding: 24px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.08);
+    border: 1px solid #f1f5f9;
+    transition: all 0.3s ease;
+}
+.diag-card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,.1);
 }
 .diag-card-title {
-    display: flex; align-items: center; gap: 7px;
-    font-size: 13px; font-weight: 700; color: #1e293b;
-    margin-bottom: 16px;
+    display: flex; align-items: center; gap: 8px;
+    font-size: 14px; font-weight: 700; color: #0f172a;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #f1f5f9;
 }
-.diag-card-title svg { width: 16px; height: 16px; color: #3b82f6; }
+.diag-card-title svg { width: 18px; height: 18px; color: #3b82f6; flex-shrink: 0; }
 
 /* Chart */
 .chart-wrap {
     position: relative;
-    width: 260px; height: 260px;
-    margin: 0 auto 12px;
+    width: 280px; height: 280px;
+    margin: 0 auto 16px;
 }
 #chartBurnout { width: 100% !important; height: 100% !important; }
 .chart-legend {
-    display: flex; justify-content: center; gap: 16px;
-    flex-wrap: wrap; font-size: 11px; color: #64748b;
+    display: flex; justify-content: center; gap: 18px;
+    flex-wrap: wrap; font-size: 12px; color: #64748b; font-weight: 500;
 }
-.chart-legend span { display: flex; align-items: center; gap: 4px; }
-.chart-legend .dot { width: 8px; height: 8px; border-radius: 50%; }
+.chart-legend span { display: flex; align-items: center; gap: 6px; }
+.chart-legend .dot { width: 9px; height: 9px; border-radius: 50%; }
 
-/* Variabel list */
-.var-list { display: flex; flex-direction: column; gap: 8px; }
+/* Variabel list - Accordion Style */
+.var-list { display: flex; flex-direction: column; gap: 0; }
+
+/* Dimension section header - Now clickable */
+.var-dimension-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 14px;
+    margin: 0;
+    font-weight: 700;
+    font-size: 13px;
+    border-bottom: 2px solid;
+    background: #fafbfc;
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.2s ease;
+    border-radius: 8px;
+    margin-bottom: 2px;
+}
+.var-dimension-header:hover {
+    background: #f1f5f9;
+}
+.var-dimension-header.active {
+    background: #f0f9ff;
+}
+.var-dimension-header::before {
+    content: '▼';
+    display: inline-block;
+    width: 16px;
+    text-align: center;
+    transition: transform 0.3s ease;
+    font-size: 10px;
+}
+.var-dimension-header:not(.active)::before {
+    transform: rotate(-90deg);
+}
+.var-dimension-badge {
+    font-size: 11px;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-weight: 700;
+    min-width: 28px;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.var-items-container {
+    display: none;
+    flex-direction: column;
+    gap: 0;
+    margin-bottom: 8px;
+}
+.var-items-container.active {
+    display: flex;
+}
+
 .var-item {
-    display: flex; align-items: center; gap: 8px;
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 12px;
+    border-radius: 0;
+    background: white;
+    border-left: 3px solid transparent;
+    border-bottom: 1px solid #f1f5f9;
+    transition: all 0.15s ease;
+}
+.var-item:last-child {
+    border-bottom: none;
+}
+.var-item:hover {
+    background: #fafbfc;
 }
 .var-badge {
-    font-size: 9px; font-weight: 700; padding: 2px 5px;
-    border-radius: 4px; min-width: 28px; text-align: center;
+    font-size: 10px; font-weight: 700; padding: 2px 6px;
+    border-radius: 5px; min-width: 24px; text-align: center;
+    flex-shrink: 0;
 }
-.badge-kel { background: #fee2e2; color: #dc2626; }
-.badge-dep { background: #ffedd5; color: #ea580c; }
-.badge-pre { background: #fef9c3; color: #ca8a04; }
-.var-label { flex: 1; font-size: 12px; color: #374151; }
-.var-bar-wrap { width: 100px; }
-.var-bar-track { height: 5px; border-radius: 3px; background: #f1f5f9; overflow: hidden; }
-.var-bar-fill  { height: 100%; border-radius: 3px; transition: width .4s; }
-.var-score { font-size: 11.5px; color: #64748b; min-width: 26px; text-align: right; }
-.var-dot-status { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.badge-kel { background: #fee2e2; color: #991b1b; }
+.badge-dep { background: #ffedd5; color: #92400e; }
+.badge-pre { background: #fef9c3; color: #713f12; }
+.var-label { flex: 1; font-size: 12px; color: #334155; font-weight: 500; line-height: 1.4; }
+.var-bar-wrap { width: 70px; flex-shrink: 0; }
+.var-bar-track { height: 4px; border-radius: 2px; background: #e2e8f0; overflow: hidden; }
+.var-bar-fill  { height: 100%; border-radius: 2px; transition: width .4s; }
+.var-score { font-size: 12px; color: #475569; font-weight: 600; min-width: 28px; text-align: center; flex-shrink: 0; }
+.var-dot-status { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
 
 /* ===================== LOGIKA PAKAR ===================== */
 .logika-card {
     background: white;
-    border-radius: 12px;
-    padding: 20px;
-    box-shadow: 0 1px 6px rgba(0,0,0,.06);
-    margin-bottom: 16px;
+    border-radius: 14px;
+    padding: 24px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.08);
+    border: 1px solid #f1f5f9;
+    margin-bottom: 18px;
 }
 .logika-header {
     display: flex; justify-content: space-between; align-items: center;
-    margin-bottom: 14px;
+    margin-bottom: 18px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #f1f5f9;
 }
-.logika-title { font-size: 13px; font-weight: 700; color: #1e293b;
-    display: flex; align-items: center; gap: 7px; }
+.logika-title { font-size: 14px; font-weight: 700; color: #0f172a;
+    display: flex; align-items: center; gap: 8px; }
+.logika-title svg { width: 18px; height: 18px; }
 .cf-badge {
-    background: #eff6ff; color: #2563eb;
+    background: #dbeafe; color: #0c4a6e;
     border: 1px solid #bfdbfe;
-    border-radius: 6px; padding: 3px 10px;
-    font-size: 11px; font-weight: 600;
+    border-radius: 8px; padding: 5px 12px;
+    font-size: 12px; font-weight: 700;
 }
-.penelusuran-title { font-size: 12px; font-weight: 600; color: #374151; margin-bottom: 10px;
+.penelusuran-title { font-size: 12.5px; font-weight: 700; color: #0f172a; margin-bottom: 10px;
     display: flex; align-items: center; gap: 6px; }
 .penelusuran-title::before { content: '●'; color: #3b82f6; font-size: 8px; }
 
 .fallback-box {
-    background: #f8fafc;
-    border: 1px dashed #cbd5e1;
-    border-radius: 10px;
-    padding: 28px;
+    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+    border: 2px solid #86efac;
+    border-radius: 12px;
+    padding: 32px 24px;
     text-align: center;
 }
-.fallback-box svg { width: 36px; height: 36px; color: #94a3b8; margin-bottom: 8px; }
-.fallback-box p { color: #64748b; font-size: 12.5px; font-weight: 600; margin: 0 0 4px; }
-.fallback-box small { color: #94a3b8; font-size: 11px; }
+.fallback-box svg { width: 40px; height: 40px; color: #22c55e; margin-bottom: 10px; }
+.fallback-box p { color: #16a34a; font-size: 13.5px; font-weight: 700; margin: 0 0 4px; }
+.fallback-box small { color: #86efac; font-size: 12px; }
 
 .cf-note {
-    margin-top: 12px;
-    background: #eff6ff;
-    border-radius: 8px;
-    padding: 10px 14px;
-    display: flex; align-items: flex-start; gap: 8px;
-    font-size: 11.5px; color: #3b82f6;
+    margin-top: 16px;
+    background: linear-gradient(135deg, #eff6ff 0%, #f0f9ff 100%);
+    border-radius: 10px;
+    border: 1px solid #bfdbfe;
+    padding: 12px 16px;
+    display: flex; align-items: flex-start; gap: 10px;
+    font-size: 12px; color: #0c4a6e; line-height: 1.5;
 }
-.cf-note svg { width: 14px; height: 14px; flex-shrink: 0; margin-top: 1px; }
+.cf-note svg { width: 16px; height: 16px; flex-shrink: 0; margin-top: 2px; }
+
+/* ===================== CARA BACA HASIL ===================== */
+.cara-baca-wrap {
+    margin-top: 18px;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    overflow: hidden;
+}
+.cara-baca-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    border-bottom: 1px solid #e2e8f0;
+    font-size: 12px;
+    font-weight: 700;
+    color: #0f172a;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.2s;
+}
+.cara-baca-header:hover { background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%); }
+.cara-baca-header svg { width: 15px; height: 15px; color: #3b82f6; flex-shrink: 0; }
+.cara-baca-header .caret {
+    margin-left: auto;
+    font-size: 10px;
+    color: #94a3b8;
+    transition: transform 0.3s;
+}
+.cara-baca-header.open .caret { transform: rotate(180deg); }
+.cara-baca-body {
+    display: none;
+    padding: 14px 16px;
+    background: white;
+}
+.cara-baca-body.open { display: block; }
+.risk-guide-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 14px;
+}
+.risk-guide-item {
+    border-radius: 10px;
+    padding: 12px 14px;
+    border: 2px solid;
+}
+.risk-guide-item.rendah  { background: linear-gradient(135deg,#f0fdf4,#dcfce7); border-color:#86efac; }
+.risk-guide-item.sedang  { background: linear-gradient(135deg,#fffbeb,#fef3c7); border-color:#fde68a; }
+.risk-guide-item.tinggi  { background: linear-gradient(135deg,#fef2f2,#fee2e2); border-color:#fca5a5; }
+.risk-guide-item .rg-icon { font-size: 20px; margin-bottom: 6px; }
+.risk-guide-item .rg-label {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+}
+.risk-guide-item.rendah .rg-label { color: #15803d; }
+.risk-guide-item.sedang .rg-label { color: #b45309; }
+.risk-guide-item.tinggi .rg-label { color: #b91c1c; }
+.risk-guide-item .rg-desc { font-size: 11px; line-height: 1.55; }
+.risk-guide-item.rendah .rg-desc { color: #166534; }
+.risk-guide-item.sedang .rg-desc { color: #78350f; }
+.risk-guide-item.tinggi .rg-desc { color: #991b1b; }
+
+/* Metodologi Badges */
+.metode-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    padding-top: 10px;
+    border-top: 1px solid #f1f5f9;
+}
+.metode-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: #64748b;
+    flex-shrink: 0;
+}
+.metode-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+.metode-badge.blue  { background: #dbeafe; color: #1d4ed8; border: 1px solid #bfdbfe; }
+.metode-badge.blue:hover { background: #bfdbfe; }
+.metode-badge.violet { background: #ede9fe; color: #6d28d9; border: 1px solid #ddd6fe; }
+.metode-badge.violet:hover { background: #ddd6fe; }
+.metode-badge.teal  { background: #ccfbf1; color: #0f766e; border: 1px solid #99f6e4; }
+.metode-badge.teal:hover { background: #99f6e4; }
+@media (max-width: 600px) {
+    .risk-guide-grid { grid-template-columns: 1fr; }
+}
 
 /* ===================== REKOMENDASI ===================== */
 .rekom-card {
     background: white;
-    border-radius: 12px;
-    padding: 20px;
-    box-shadow: 0 1px 6px rgba(0,0,0,.06);
-    margin-bottom: 16px;
+    border-radius: 14px;
+    padding: 24px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.08);
+    border: 1px solid #f1f5f9;
+    margin-bottom: 18px;
 }
-.rekom-title { font-size: 13px; font-weight: 700; color: #1e293b;
-    display: flex; align-items: center; gap: 7px; margin-bottom: 14px; }
+.rekom-title { font-size: 14px; font-weight: 700; color: #0f172a;
+    display: flex; align-items: center; gap: 8px; margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #f1f5f9;
+}
+.rekom-title svg { width: 18px; height: 18px; }
 .rekom-alert {
-    border-radius: 10px;
-    padding: 16px 18px;
-    border: 1px solid;
+    border-radius: 12px;
+    padding: 18px 20px;
+    border: 2px solid;
+    margin-bottom: 14px;
 }
-.rekom-alert.tinggi { background: #fffbeb; border-color: #fde68a; }
-.rekom-alert.sedang { background: #fef3c7; border-color: #fcd34d; }
-.rekom-alert.rendah { background: #f0fdf4; border-color: #bbf7d0; }
-.rekom-alert .saran-label { font-size: 11px; font-weight: 700; color: #92400e; margin-bottom: 6px;
-    display: flex; align-items: center; gap: 5px; }
+.rekom-alert.tinggi { background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%); border-color: #fca5a5; }
+.rekom-alert.sedang { background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%); border-color: #fde68a; }
+.rekom-alert.rendah { background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border-color: #bbf7d0; }
+.rekom-alert .saran-label { font-size: 12px; font-weight: 700; color: #92400e; margin-bottom: 8px;
+    display: flex; align-items: center; gap: 6px; }
 .rekom-alert .saran-label.rendah { color: #166534; }
-.rekom-alert p { font-size: 12.5px; color: #78350f; margin: 0; line-height: 1.6; }
+.rekom-alert p { font-size: 13.5px; color: #78350f; margin: 0; line-height: 1.6; font-weight: 500; }
 .rekom-alert p.rendah { color: #166534; }
 
+/* AI recommendation rendered markdown */
+.ai-rekom-content h3 { font-size: 13.5px; font-weight: 700; color: #1e3a5f; margin: 14px 0 5px; }
+.ai-rekom-content h4 { font-size: 12.5px; font-weight: 700; color: #1e3a5f; margin: 12px 0 4px; }
+.ai-rekom-content ul { padding-left: 18px; margin: 6px 0 10px; }
+.ai-rekom-content li { margin-bottom: 5px; color: #334155; font-size: 13px; line-height: 1.65; }
+.ai-rekom-content strong { color: #0f172a; }
+
 .periodic-note {
-    display: flex; align-items: center; gap: 8px;
-    font-size: 11.5px; color: #64748b;
-    margin-top: 10px;
+    display: flex; align-items: flex-start; gap: 10px;
+    font-size: 12px; color: #64748b;
+    margin-top: 12px;
+    padding: 12px;
+    background: #f8fafc;
+    border-radius: 8px;
+    border-left: 3px solid #3b82f6;
 }
-.periodic-note svg { width: 14px; height: 14px; color: #3b82f6; flex-shrink: 0; }
+.periodic-note svg { width: 16px; height: 16px; color: #3b82f6; flex-shrink: 0; margin-top: 2px; }
+
+@media (max-width: 992px) {
+    .diag-grid { grid-template-columns: 1fr; }
+}
 
 @media (max-width: 768px) {
     .sbcare-sidebar { display: none; }
-    .sbcare-main { margin-left: 0; padding: 16px; }
+    .sbcare-main { margin-left: 0; padding: 14px; }
     .diag-grid { grid-template-columns: 1fr; }
-    .summary-card { flex-direction: column; align-items: flex-start; gap: 14px; }
+    .summary-card { flex-direction: column; align-items: flex-start; gap: 16px; }
     .summary-right { text-align: left; }
+    .page-actions { flex-direction: column; }
+    .btn-action { width: 100%; justify-content: center; }
+    .var-item { gap: 8px; flex-wrap: wrap; }
+    .var-label { flex: 1 100%; }
+    .diag-card { padding: 16px; }
 }
 
 @media print {
@@ -442,52 +711,57 @@
 .xai-toggle-btn {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    background: #eff6ff;
-    border: 1px solid #bfdbfe;
-    color: #1e40af;
-    padding: 8px 14px;
-    border-radius: 8px;
-    font-size: 11px;
+    gap: 7px;
+    background: linear-gradient(135deg, #dbeafe 0%, #eff6ff 100%);
+    border: 2px solid #bfdbfe;
+    color: #0c4a6e;
+    padding: 9px 16px;
+    border-radius: 9px;
+    font-size: 12px;
     font-weight: 700;
     cursor: pointer;
-    margin-top: 12px;
+    margin-top: 14px;
     transition: all 0.2s;
 }
 .xai-toggle-btn:hover {
-    background: #dbeafe;
+    background: linear-gradient(135deg, #bfdbfe 0%, #dbeafe 100%);
+    border-color: #60a5fa;
 }
 .xai-toggle-btn svg {
-    transition: transform 0.2s ease;
+    transition: transform 0.3s ease;
 }
 .xai-details {
     display: none;
-    margin-top: 14px;
-    padding: 16px;
-    background: #f8fafc;
-    border: 1px solid #e2e8f0;
-    border-radius: 10px;
-    border-top: 2px solid #3b82f6;
+    margin-top: 16px;
+    padding: 18px;
+    background: linear-gradient(135deg, #f0f9ff 0%, #f8fafc 100%);
+    border: 2px solid #e0f2fe;
+    border-radius: 12px;
+    border-top: 3px solid #0284c7;
 }
 .xai-table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 11px;
+    font-size: 12px;
     color: #334155;
-    margin-bottom: 6px;
+    margin-bottom: 8px;
 }
 .xai-table th {
-    background: #f1f5f9;
-    border: 1px solid #cbd5e1;
-    padding: 8px 10px;
+    background: linear-gradient(135deg, #e0f2fe 0%, #dbeafe 100%);
+    border: 1px solid #bae6fd;
+    padding: 10px;
     text-align: left;
     font-weight: 700;
+    color: #0c4a6e;
 }
 .xai-table td {
-    border: 1px solid #cbd5e1;
-    padding: 8px 10px;
+    border: 1px solid #e0f2fe;
+    padding: 10px;
     vertical-align: top;
     background: white;
+}
+.xai-table tbody tr:nth-child(even) td {
+    background: #f8fafc;
 }
 </style>
 
@@ -603,82 +877,107 @@
                         <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/>
                         </svg>
-                        Detail Skor per Variabel
+                        Skor per Item IPIP-20
                     </div>
                     <div class="var-list">
-                        @foreach($namaVariabel as $i => $v)
                         @php
-                            $skor = $jawaban[$i] ?? 0;
-                            $pct  = $skor * 20;
-                            $c    = $dimColor[$v['dim']];
-                            $statusColor = $skor >= 4 ? '#ef4444' : ($skor >= 3 ? '#f97316' : '#22c55e');
+                            $dimensionOrder = ['E', 'A', 'C', 'N', 'O'];
+                            $dimensionLabels = [
+                                'E' => 'Extraversion',
+                                'A' => 'Agreeableness',
+                                'C' => 'Conscientiousness',
+                                'N' => 'Neuroticism',
+                                'O' => 'Openness'
+                            ];
+                            $dimensionColors = [
+                                'E' => '#eab308',
+                                'A' => '#22c55e',
+                                'C' => '#ef4444',
+                                'N' => '#a855f7',
+                                'O' => '#0ea5e9'
+                            ];
                         @endphp
-                        <div class="var-item">
-                            <span class="var-badge {{ $c['badge'] }}">{{ $v['dim'] }}</span>
-                            <span class="var-label">{{ $v['label'] }}</span>
-                            <div class="var-bar-wrap">
-                                <div class="var-bar-track">
-                                    <div class="var-bar-fill" style="width:{{ $pct }}%; background:{{ $c['bg'] }}"></div>
-                                </div>
+                        
+                        @foreach($dimensionOrder as $index => $dimCode)
+                            @php
+                                $itemsInDim = [];
+                                foreach($namaVariabel as $idx => $item) {
+                                    if($item['dim'] === $dimCode) {
+                                        $itemsInDim[$idx] = $item;
+                                    }
+                                }
+                                $dimColor = $dimensionColors[$dimCode];
+                                $isFirstDim = $index === 0;
+                            @endphp
+                            
+                            <div class="var-dimension-header {{ $isFirstDim ? 'active' : '' }}" onclick="toggleDimension(this, event)" style="border-color: {{ $dimColor }}22;">
+                                <div class="var-dimension-badge" style="background: {{ $dimColor }}22; color: {{ $dimColor }};">{{ $dimCode }}</div>
+                                <span style="color: {{ $dimColor }}; flex: 1;">{{ $dimensionLabels[$dimCode] }}</span>
+                                <span style="font-size: 11px; color: #94a3b8; font-weight: 600;">{{ count($itemsInDim) }} item</span>
                             </div>
-                            <span class="var-score">{{ $skor }}/5</span>
-                            <div class="var-dot-status" style="background:{{ $statusColor }}"></div>
-                        </div>
+                            
+                            <div class="var-items-container {{ $isFirstDim ? 'active' : '' }}">
+                                @foreach($itemsInDim as $i => $v)
+                                    @php
+                                        $skor = $jawaban[$i] ?? 0;
+                                        if (!empty($v['reverse'])) {
+                                            $displaySkor = 6 - $skor;
+                                        } else {
+                                            $displaySkor = $skor;
+                                        }
+                                        $pct  = $displaySkor * 20;
+                                        $badgeClass = $dimColor === '#ef4444' ? 'badge-kel' : ($dimColor === '#a855f7' ? 'badge-dep' : 'badge-pre');
+                                        $statusColor = $displaySkor >= 4 ? '#ef4444' : ($displaySkor >= 3 ? '#f97316' : '#22c55e');
+                                    @endphp
+                                    <div class="var-item" style="border-left-color: {{ $dimColor }};">
+                                        <span class="var-badge {{ $badgeClass }}">{{ $v['dim'] }}</span>
+                                        <span class="var-label">{!! $v['label'] . (!empty($v['reverse']) ? ' <span style="color:#9ca3af; font-size:10px; font-weight:600;">(R)</span>' : '') !!}</span>
+                                        <div class="var-bar-wrap">
+                                            <div class="var-bar-track">
+                                                <div class="var-bar-fill" style="width:{{ $pct }}%; background:{{ $dimColor }};"></div>
+                                            </div>
+                                        </div>
+                                        <span class="var-score">{{ $skor }}/5</span>
+                                        <div class="var-dot-status" style="background:{{ $statusColor }}"></div>
+                                    </div>
+                                @endforeach
+                            </div>
                         @endforeach
                     </div>
                 </div>
             </div>
 
-            <!-- Logika Pakar -->
+            <!-- Logika Pakar - Simplified -->
             <div class="logika-card">
                 <div class="logika-header">
                     <div class="logika-title">
                         <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" width="16" height="16" color="#3b82f6">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
                         </svg>
-                        Logika Pakar
+                        Hasil Analisis
                     </div>
-                    <span class="cf-badge">Skor EDAS: {{ $edasScore !== null ? number_format($edasScore, 2) . '%' : number_format($total, 1) . '%' }}</span>
+                    <span class="cf-badge">Skor: {{ $edasScore !== null ? number_format($edasScore, 2) . '%' : number_format($total, 1) . '%' }}</span>
                 </div>
 
-                <div class="penelusuran-title">Perhitungan SPK Metode EDAS</div>
-
-                <div class="fallback-box">
-                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                    </svg>
-                    <p>Alternatif terbaik: {{ $risikoLabel }}</p>
-                    <small>EDAS meranking alternatif Risiko Rendah, Sedang, dan Tinggi berdasarkan jarak trait OCEAN dari solusi rata-rata.</small>
+                <!-- Hasil Utama -->
+                <div style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border: 2px solid #0284c7; border-radius: 14px; padding: 22px 24px; margin-bottom: 18px; text-align: center;">
+                    <div style="font-size: 12px; color: #0c4a6e; font-weight: 700; letter-spacing: 0.5px; margin-bottom: 8px; text-transform: uppercase;">Hasil Diagnosis (Metode EDAS)</div>
+                    <div style="font-size: 28px; font-weight: 900; color: #0369a1; margin-bottom: 4px;">{{ $risikoLabel }}</div>
+                    <div style="font-size: 12px; color: #0c4a6e; line-height: 1.5;">Berdasarkan perbandingan profil OCEAN Anda dengan target risiko</div>
                 </div>
 
-                @if($edas && isset($edas['ranking']))
-                <div class="var-list" style="margin-top:12px;">
-                    @foreach($edas['ranking'] as $kode => $rank)
-                    <div class="var-item">
-                        <span class="var-badge {{ $kode === 'tinggi' ? 'badge-kel' : ($kode === 'sedang' ? 'badge-pre' : 'badge-dep') }}">{{ strtoupper(substr($kode, 0, 1)) }}</span>
-                        <span class="var-label">{{ $rank['label'] }}</span>
-                        <div class="var-bar-wrap">
-                            <div class="var-bar-track">
-                                <div class="var-bar-fill" style="width:{{ $rank['skor'] }}%; background:#3b82f6"></div>
-                            </div>
-                        </div>
-                        <span class="var-score">{{ number_format($rank['skor'], 2) }}</span>
-                    </div>
-                    @endforeach
-                </div>
-                @endif
-                
+                <!-- Tombol Detail -->
                 <button class="xai-toggle-btn" onclick="toggleXaiDetails()">
                     <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" width="13" height="13" id="xai-toggle-icon" style="transform: rotate(0deg);">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
                     </svg>
-                    Tampilkan Detail Transparansi Matematis (Explainable AI)
+                    Lihat Detail Perhitungan
                 </button>
 
                 <div class="xai-details" id="xai-details-content">
-                    <div style="font-size: 12px; font-weight: 700; color: #1e293b; margin-bottom: 6px;">Matriks Evaluasi & Kecocokan Trait (Similarity Matrix)</div>
-                    <p style="font-size: 11px; color: #64748b; margin-bottom: 12px; line-height: 1.5;">
-                        Tabel di bawah ini menunjukkan tingkat kemiripan/kecocokan antara skor kepribadian Anda dengan target profil pakar untuk setiap alternatif risiko (dihitung menggunakan formula $100 - |\text{Skor Anda} - \text{Target Pakar}|$). Solusi Rata-rata (AV) dihitung sebagai rata-rata tingkat kemiripan dari ketiga alternatif untuk mengukur tingkat kejauhan keputusan (PDA/NDA) dalam metode EDAS.
+                    <div style="font-size: 12px; font-weight: 700; color: #1e293b; margin-bottom: 6px;">📊 Detail Perhitungan Metode EDAS</div>
+                    <p style="font-size: 11px; color: #64748b; margin-bottom: 12px; line-height: 1.6;">
+                        Metode EDAS membandingkan skor kepribadian OCEAN Anda dengan 3 profil target (Rendah, Sedang, Tinggi). Kolom "Cocok" menunjukkan persentase kesamaan (semakin tinggi = semakin mirip profil tersebut). <strong>Kategori risiko dengan nilai kecocokan tertinggi adalah diagnosis Anda.</strong>
                     </p>
 
                     <div style="overflow-x: auto;">
@@ -754,14 +1053,89 @@
                             icon.style.transform = 'rotate(180deg)';
                         }
                     }
+
+                    function toggleDimension(header, event) {
+                        // Find the next sibling var-items-container
+                        var container = header.nextElementSibling;
+                        if (!container || !container.classList.contains('var-items-container')) return;
+
+                        var isActive = header.classList.contains('active');
+
+                        if (isActive) {
+                            // Collapse
+                            header.classList.remove('active');
+                            container.classList.remove('active');
+                        } else {
+                            // Expand this one
+                            header.classList.add('active');
+                            container.classList.add('active');
+                        }
+                    }
                 </script>
 
-                <div class="cf-note">
-                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                    </svg>
-                    Nilai kriteria berasal dari model OCEAN/Big Five, lalu model EDAS memilih alternatif keputusan dengan appraisal score tertinggi.
+                {{-- ===== CARA MEMBACA HASIL + METODOLOGI ===== --}}
+                <div class="cara-baca-wrap">
+                    <div class="cara-baca-header" onclick="toggleCaraBaca(this)" id="cara-baca-toggle">
+                        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        Cara Membaca Hasil Diagnosis
+                        <span class="caret">▼</span>
+                    </div>
+                    <div class="cara-baca-body" id="cara-baca-body">
+                        <div class="risk-guide-grid">
+                            {{-- Risiko Rendah --}}
+                            <div class="risk-guide-item rendah">
+                                <div class="rg-icon">✅</div>
+                                <div class="rg-label">Risiko Rendah</div>
+                                <div class="rg-desc">Kondisi psikologis Anda sehat. Pertahankan kebiasaan positif dan keseimbangan akademik-istirahat.</div>
+                            </div>
+                            {{-- Risiko Sedang --}}
+                            <div class="risk-guide-item sedang">
+                                <div class="rg-icon">⚠️</div>
+                                <div class="rg-label">Risiko Sedang</div>
+                                <div class="rg-desc">Ada tanda-tanda kelelahan. Perlu perhatian lebih pada manajemen waktu dan istirahat yang cukup.</div>
+                            </div>
+                            {{-- Risiko Tinggi --}}
+                            <div class="risk-guide-item tinggi">
+                                <div class="rg-icon">🚨</div>
+                                <div class="rg-label">Risiko Tinggi</div>
+                                <div class="rg-desc">Burnout sudah signifikan. Segera cari dukungan konselor kampus dan kurangi beban aktivitas.</div>
+                            </div>
+                        </div>
+
+                        {{-- Metodologi Badges --}}
+                        <div class="metode-row">
+                            <span class="metode-label">📚 Metode:</span>
+                            <a href="https://ipip.ori.org" target="_blank" class="metode-badge blue">
+                                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" width="11" height="11"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+                                Big Five IPIP-20
+                            </a>
+                            <span class="metode-badge violet">
+                                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" width="11" height="11"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 11h.01M12 11h.01M15 11h.01M4 19h16a2 2 0 002-2V7a2 2 0 00-2-2H4a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                                Metode EDAS
+                            </span>
+                            <span class="metode-badge teal">
+                                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" width="11" height="11"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                                SPK Burnout IT
+                            </span>
+                        </div>
+                    </div>
                 </div>
+
+                <script>
+                    function toggleCaraBaca(header) {
+                        var body = document.getElementById('cara-baca-body');
+                        var isOpen = header.classList.contains('open');
+                        if (isOpen) {
+                            header.classList.remove('open');
+                            body.classList.remove('open');
+                        } else {
+                            header.classList.add('open');
+                            body.classList.add('open');
+                        }
+                    }
+                </script>
             </div>
 
             <!-- Rekomendasi -->
@@ -770,29 +1144,30 @@
                     <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" width="16" height="16" color="#f59e0b">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
                     </svg>
-                    Rekomendasi Pakar dan Tindakan
+                    Rekomendasi
                 </div>
 
-                @if(!empty($aiRekomendasi))
+                @if(!empty($aiRekomendasi) && $aiRekomendasi !== '-')
                 <div class="rekom-alert" style="background:#f0f9ff; border-color:#38bdf8;">
-                    <div class="saran-label" style="color:#0ea5e9;">🤖 Rekomendasi AI Gemini:</div>
-                    <p style="color:#0e7490;">{!! nl2br(e($aiRekomendasi)) !!}</p>
+                    <div class="saran-label" style="color:#0ea5e9;">🤖 Rekomendasi AI Berdasarkan Diagnosis {{ $risikoLabel }}:</div>
+                    <div class="ai-rekom-content" style="color:#334155; font-size:13px; line-height:1.75;">{!! $aiRekomendasiHtml !!}</div>
                 </div>
                 @else
-                    @if($total >= 70)
+                    {{-- Fallback berdasarkan hasil EDAS ($risikoLabel), bukan $total numerik --}}
+                    @if($risikoLabel === 'RISIKO TINGGI')
                     <div class="rekom-alert tinggi">
-                        <div class="saran-label">💡 Saran Utama:</div>
-                        <p>Kondisi Anda menunjukkan tingkat burnout yang tinggi. Disarankan untuk segera melakukan penyesuaian pola aktivitas dan mencari dukungan profesional agar kondisi tidak semakin memburuk.</p>
+                        <div class="saran-label">💡 Saran Utama (Risiko Tinggi):</div>
+                        <p>Kondisi Anda menunjukkan risiko burnout yang <strong>tinggi</strong>. Segera kurangi beban aktivitas, cari dukungan konselor kampus, dan prioritaskan kesehatan mental Anda sebelum kondisi memburuk.</p>
                     </div>
-                    @elseif($total >= 40)
+                    @elseif($risikoLabel === 'RISIKO SEDANG')
                     <div class="rekom-alert sedang">
-                        <div class="saran-label">💡 Saran Utama:</div>
-                        <p>Tingkat burnout Anda berada di level sedang. Perlu manajemen waktu yang lebih baik dan istirahat yang cukup untuk mencegah kondisi memburuk.</p>
+                        <div class="saran-label">💡 Saran Utama (Risiko Sedang):</div>
+                        <p>Risiko burnout Anda berada di level <strong>sedang</strong>. Terapkan manajemen waktu yang lebih baik, istirahat yang cukup, dan hindari menumpuk tugas di last minute agar kondisi tidak semakin buruk.</p>
                     </div>
                     @else
                     <div class="rekom-alert rendah">
-                        <div class="saran-label rendah">✅ Saran Utama:</div>
-                        <p class="rendah">Kondisi Anda masih baik. Tetap jaga keseimbangan aktivitas dan istirahat yang cukup untuk mempertahankan kondisi ini.</p>
+                        <div class="saran-label rendah">✅ Saran Utama (Risiko Rendah):</div>
+                        <p class="rendah">Kondisi psikologis Anda <strong>baik</strong>. Pertahankan kebiasaan positif, jaga keseimbangan aktivitas akademik dan istirahat, serta tetap terhubung dengan lingkungan sosial kampus.</p>
                     </div>
                     @endif
                 @endif
@@ -884,21 +1259,33 @@
                 </tr>
             </table>
 
-            {{-- REKOMENDASI PAKAR --}}
+            {{-- REKOMENDASI --}}
             <div style="font-size:13px; font-weight:700; color:#1e293b; margin-bottom:10px; padding-bottom:4px; border-bottom:2px solid #e2e8f0;">
-                Rekomendasi Pakar
+                Rekomendasi
             </div>
-            <div style="background:#fffbeb; border:1px solid #fde68a; border-radius:8px; padding:14px 16px; margin-bottom:16px;">
-                <div style="font-size:11px; font-weight:700; color:#92400e; margin-bottom:6px;">💡 Saran Utama:</div>
-                <p style="font-size:12px; color:#78350f; margin:0; line-height:1.6;">
-                    @if($total >= 70)
-                        Kondisi Anda menunjukkan tingkat burnout yang tinggi. Disarankan untuk segera melakukan penyesuaian pola aktivitas dan mencari dukungan profesional agar kondisi tidak semakin memburuk.
-                    @elseif($total >= 40)
-                        Tingkat burnout Anda berada di level sedang. Perlu manajemen waktu yang lebih baik dan istirahat yang cukup untuk mencegah kondisi memburuk.
+            @php
+                $hasAi = !empty($aiRekomendasi) && $aiRekomendasi !== '-';
+                $rekomBg = $hasAi ? '#f0f9ff' : ($total >= 70 ? '#fef2f2' : ($total >= 40 ? '#fffbeb' : '#f0fdf4'));
+                $rekomBorder = $hasAi ? '#38bdf8' : ($total >= 70 ? '#fecaca' : ($total >= 40 ? '#fde68a' : '#bbf7d0'));
+                $rekomTextCol = $hasAi ? '#334155' : ($total >= 70 ? '#7f1d1d' : ($total >= 40 ? '#78350f' : '#166534'));
+                $rekomLabelCol = $hasAi ? '#0ea5e9' : ($total >= 70 ? '#dc2626' : ($total >= 40 ? '#92400e' : '#166534'));
+                $rekomLabel = $hasAi ? '🤖 Rekomendasi Hasil Diagnosis:' : '💡 Saran Utama:';
+            @endphp
+            <div style="background:{{ $rekomBg }}; border:1px solid {{ $rekomBorder }}; border-radius:8px; padding:14px 16px; margin-bottom:16px;">
+                <div style="font-size:11px; font-weight:700; color:{{ $rekomLabelCol }}; margin-bottom:6px;">{{ $rekomLabel }}</div>
+                <div style="font-size:11.5px; color:{{ $rekomTextCol }}; margin:0; line-height:1.6;">
+                    @if($hasAi)
+                        {!! nl2br(e($aiRekomendasi)) !!}
                     @else
-                        Kondisi Anda masih baik. Tetap jaga keseimbangan aktivitas dan istirahat yang cukup untuk mempertahankan kondisi ini.
+                        @if($total >= 70)
+                            Kondisi Anda menunjukkan tingkat burnout yang tinggi. Disarankan untuk segera melakukan penyesuaian pola aktivitas dan mencari dukungan profesional agar kondisi tidak semakin memburuk.
+                        @elseif($total >= 40)
+                            Tingkat burnout Anda berada di level sedang. Perlu manajemen waktu yang lebih baik dan istirahat yang cukup untuk mencegah kondisi memburuk.
+                        @else
+                            Kondisi Anda masih baik. Tetap jaga keseimbangan aktivitas dan istirahat yang cukup untuk mempertahankan kondisi ini.
+                        @endif
                     @endif
-                </p>
+                </div>
             </div>
 
             {{-- LOGIKA DIAGNOSIS --}}

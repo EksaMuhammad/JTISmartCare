@@ -15,14 +15,16 @@
         <div class="instruksi-left">
             <div class="instr-title">Instruksi Pengisian</div>
             <p>
-                Jawab <strong>10 pernyataan</strong> berikut secara jujur berdasarkan gambaran diri Anda secara umum.
-                Pilih tingkat persetujuan yang paling mencerminkan diri anda.
-                Tidak ada jawaban benar atau salah.
+                Jawab <strong>20 pernyataan</strong> berikut secara jujur sesuai gambaran diri Anda secara umum.
+                Pilih tingkat persetujuan yang paling mencerminkan diri Anda.
+                <br><small style="color:#777; margin-top:4px; display:block;">
+                    📚 Standar <strong>IPIP-20 (Big Five Personality)</strong> - <a href="https://ipip.ori.org" target="_blank" style="color:#1a6fa8; text-decoration:none;">ipip.ori.org</a>
+                </small>
             </p>
         </div>
         <div class="estimasi-box">
             <span class="est-label">Estimasi Waktu</span>
-            <div class="est-val">3 Menit</div>
+            <div class="est-val">5 Menit</div>
         </div>
     </div>
 
@@ -34,7 +36,7 @@
         <div class="progress mb-3" style="height: 8px; border-radius: 99px;">
             <div id="progressBar" class="progress-bar" role="progressbar" style="width:0%; border-radius: 99px; background:#1a73e8;"></div>
         </div>
-        <div id="progressLabel" class="text-end mb-3" style="font-size:11px; color:#888;">0 / 10 terjawab</div>
+        <div id="progressLabel" class="text-end mb-3" style="font-size:11px; color:#888;">0 / 20 terjawab</div>
 
         <div id="questions"></div>
 
@@ -352,74 +354,149 @@ document.addEventListener("DOMContentLoaded", function () {
     const agreementOptions = [["Sangat Tidak Setuju","Tidak sesuai"],["Tidak Setuju","Kurang sesuai"],["Netral","Cukup sesuai"],["Setuju","Sesuai"],["Sangat Setuju","Sangat sesuai"]];
 
     const questions = [
+        // EXTRAVERSION (4 items) - Konteks TI/Informatika
         {
             cat: "EXTRAVERSION",
             catColor: "#EAB308",
-            title: "Saya mudah bergaul dan energik saat bersama orang lain.",
-            desc: "Menilai kecenderungan aktif secara sosial.",
-            opts: agreementOptions
-        },
-        {
-            cat: "AGREEABLENESS",
-            catColor: "#22C55E",
-            title: "Saya sering bersikap kritis dan mudah mencari kesalahan orang lain.",
-            desc: "Item reverse untuk keramahan dan kooperatif.",
-            opts: agreementOptions
-        },
-        {
-            cat: "CONSCIENTIOUSNESS",
-            catColor: "#EF4444",
-            title: "Saya dapat diandalkan dan menyelesaikan tugas dengan teratur.",
-            desc: "Menilai kedisiplinan dan tanggung jawab.",
-            opts: agreementOptions
-        },
-        {
-            cat: "NEUROTICISM",
-            catColor: "#A855F7",
-            title: "Saya mudah merasa cemas, tegang, atau khawatir.",
-            desc: "Menilai kerentanan terhadap emosi negatif.",
-            opts: agreementOptions
-        },
-        {
-            cat: "OPENNESS",
-            catColor: "#0EA5E9",
-            title: "Saya terbuka pada ide baru, imajinatif, dan suka belajar hal baru.",
-            desc: "Menilai keterbukaan terhadap pengalaman.",
+            title: "Saya aktif berbagi ide dan presentasi dalam diskusi teknis di kelas atau meeting project.",
+            desc: "IPIP-20 (Big Five) - Adapted for IT Students",
             opts: agreementOptions
         },
         {
             cat: "EXTRAVERSION",
             catColor: "#EAB308",
-            title: "Saya cenderung pendiam dan menjaga jarak dalam situasi sosial.",
-            desc: "Item reverse untuk extraversion.",
+            title: "Saya lebih suka bekerja sendiri pada coding task daripada kolaborasi dalam tim.",
+            desc: "IPIP-20 (Big Five) - Item reverse (R)",
+            opts: agreementOptions
+        },
+        {
+            cat: "EXTRAVERSION",
+            catColor: "#EAB308",
+            title: "Saya senang mengikuti komunitas tech, hackathon, atau seminar pemrograman.",
+            desc: "IPIP-20 (Big Five) - Adapted for IT Students",
+            opts: agreementOptions
+        },
+        {
+            cat: "EXTRAVERSION",
+            catColor: "#EAB308",
+            title: "Saya tidak nyaman menjadi leader atau koordinator dalam project development.",
+            desc: "IPIP-20 (Big Five) - Item reverse (R)",
+            opts: agreementOptions
+        },
+        // AGREEABLENESS (4 items) - Konteks TI/Informatika
+        {
+            cat: "AGREEABLENESS",
+            catColor: "#22C55E",
+            title: "Saya mudah membantu teman yang kesulitan dengan debugging atau penjelasan konsep teknis.",
+            desc: "IPIP-20 (Big Five) - Adapted for IT Students",
             opts: agreementOptions
         },
         {
             cat: "AGREEABLENESS",
             catColor: "#22C55E",
-            title: "Saya mudah berempati dan berusaha membantu orang lain.",
-            desc: "Menilai kepedulian dan kerja sama.",
+            title: "Saya tidak terlalu peduli jika teman saya menghadapi masalah dalam project atau assignment.",
+            desc: "IPIP-20 (Big Five) - Item reverse (R)",
+            opts: agreementOptions
+        },
+        {
+            cat: "AGREEABLENESS",
+            catColor: "#22C55E",
+            title: "Saya berempati dan siap memberikan support ketika teman sedang struggle dengan deadline project.",
+            desc: "IPIP-20 (Big Five) - Adapted for IT Students",
+            opts: agreementOptions
+        },
+        {
+            cat: "AGREEABLENESS",
+            catColor: "#22C55E",
+            title: "Saya tidak tertarik mendengarkan kesulitan atau masalah yang dihadapi rekan tim saya.",
+            desc: "IPIP-20 (Big Five) - Item reverse (R)",
+            opts: agreementOptions
+        },
+        // CONSCIENTIOUSNESS (4 items) - Konteks TI/Informatika
+        {
+            cat: "CONSCIENTIOUSNESS",
+            catColor: "#EF4444",
+            title: "Saya menyelesaikan assignment dan project dengan tepat waktu serta kualitas code yang baik.",
+            desc: "IPIP-20 (Big Five) - Adapted for IT Students",
             opts: agreementOptions
         },
         {
             cat: "CONSCIENTIOUSNESS",
             catColor: "#EF4444",
-            title: "Saya sering kurang teratur dan mudah menunda pekerjaan.",
-            desc: "Item reverse untuk conscientiousness.",
+            title: "Saya sering menunda-nunda pekerjaan coding hingga deadline terakhir (last minute).",
+            desc: "IPIP-20 (Big Five) - Item reverse (R)",
+            opts: agreementOptions
+        },
+        {
+            cat: "CONSCIENTIOUSNESS",
+            catColor: "#EF4444",
+            title: "Saya terorganisir dalam mengelola file project, version control, dan dokumentasi code.",
+            desc: "IPIP-20 (Big Five) - Adapted for IT Students",
+            opts: agreementOptions
+        },
+        {
+            cat: "CONSCIENTIOUSNESS",
+            catColor: "#EF4444",
+            title: "Saya sering berantakan dalam menyimpan, mendokumentasikan, dan mengelola project files.",
+            desc: "IPIP-20 (Big Five) - Item reverse (R)",
+            opts: agreementOptions
+        },
+        // NEUROTICISM (4 items) - Konteks TI/Informatika
+        {
+            cat: "NEUROTICISM",
+            catColor: "#A855F7",
+            title: "Saya mudah cemas dan stres menghadapi deadline project yang ketat atau exam teknis.",
+            desc: "IPIP-20 (Big Five) - Adapted for IT Students",
             opts: agreementOptions
         },
         {
             cat: "NEUROTICISM",
             catColor: "#A855F7",
-            title: "Saya biasanya tenang dan mampu mengendalikan stres.",
-            desc: "Item reverse untuk neuroticism.",
+            title: "Saya tenang dan rileks meskipun sedang menghadapi bug kompleks atau masalah teknis yang sulit.",
+            desc: "IPIP-20 (Big Five) - Item reverse (R)",
+            opts: agreementOptions
+        },
+        {
+            cat: "NEUROTICISM",
+            catColor: "#A855F7",
+            title: "Saya khawatir jika nilai atau performance saya dalam project tidak sesuai ekspektasi dosen.",
+            desc: "IPIP-20 (Big Five) - Adapted for IT Students",
+            opts: agreementOptions
+        },
+        {
+            cat: "NEUROTICISM",
+            catColor: "#A855F7",
+            title: "Saya jarang merasa tertekan atau pesimis meski sedang mengerjakan project yang sangat kompleks.",
+            desc: "IPIP-20 (Big Five) - Item reverse (R)",
+            opts: agreementOptions
+        },
+        // OPENNESS (4 items) - Konteks TI/Informatika
+        {
+            cat: "OPENNESS",
+            catColor: "#0EA5E9",
+            title: "Saya tertarik belajar programming language dan teknologi baru yang sedang trending.",
+            desc: "IPIP-20 (Big Five) - Adapted for IT Students",
             opts: agreementOptions
         },
         {
             cat: "OPENNESS",
             catColor: "#0EA5E9",
-            title: "Saya lebih menyukai rutinitas tetap dan kurang tertarik mencoba hal baru.",
-            desc: "Item reverse untuk openness.",
+            title: "Saya lebih suka tetap menggunakan bahasa dan tools programming yang sudah familiar daripada mencoba yang baru.",
+            desc: "IPIP-20 (Big Five) - Item reverse (R)",
+            opts: agreementOptions
+        },
+        {
+            cat: "OPENNESS",
+            catColor: "#0EA5E9",
+            title: "Saya memiliki imajinasi tinggi dalam mendesain algorithm, architecture, atau solusi sistem yang inovatif.",
+            desc: "IPIP-20 (Big Five) - Adapted for IT Students",
+            opts: agreementOptions
+        },
+        {
+            cat: "OPENNESS",
+            catColor: "#0EA5E9",
+            title: "Saya cepat belajar dan memahami konsep teknis yang kompleks, baik dari dokumentasi maupun peer teaching.",
+            desc: "IPIP-20 (Big Five) - Adapted for IT Students",
             opts: agreementOptions
         }
     ];
@@ -457,7 +534,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 function updateProgress() {
-    const total = 10;
+    const total = 20;
     const checked = document.querySelectorAll('input[type=radio]:checked').length;
     const percent = (checked / total) * 100;
 

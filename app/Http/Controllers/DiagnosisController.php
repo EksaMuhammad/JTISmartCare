@@ -28,14 +28,24 @@ class DiagnosisController extends Controller
     public function proses(Request $request)
     {
         $request->validate([
-            'jawaban'   => ['required', 'array', 'size:10'],
+            'jawaban'   => ['required', 'array', 'size:20'],
             'jawaban.*' => ['required', 'integer', 'between:1,5'],
         ]);
 
         $jawaban = array_map('intval', $request->jawaban);
 
+        // LOG INPUT UNTUK DEBUGGING
+        \Log::info('Jawaban Kuesioner User:', $jawaban);
+
         // HITUNG OCEAN + EDAS
         $hasil = $this->hitungEdasOcean($jawaban);
+
+        // LOG HASIL PERHITUNGAN
+        \Log::info('Hasil Perhitungan EDAS:', [
+            'risk_index' => $hasil['risk_index'],
+            'kategori' => $hasil['kategori'],
+            'aspek' => array_map(fn($a) => ['persen' => $a['persen']], $hasil['aspek']),
+        ]);
 
         // REKOMENDASI AI (Gemini)
         $aiData = [
@@ -145,8 +155,10 @@ class DiagnosisController extends Controller
             'openness' => [
                 'label'     => 'Openness',
                 'items'     => [
-                    ['index' => 4, 'reverse' => false],
-                    ['index' => 9, 'reverse' => true],
+                    ['index' => 16, 'reverse' => false],
+                    ['index' => 17, 'reverse' => true],
+                    ['index' => 18, 'reverse' => false],
+                    ['index' => 19, 'reverse' => false],
                 ],
                 'bobot'     => 0.15,
                 'warna'     => '#0ea5e9',
@@ -156,8 +168,10 @@ class DiagnosisController extends Controller
             'conscientiousness' => [
                 'label'     => 'Conscientiousness',
                 'items'     => [
-                    ['index' => 2, 'reverse' => false],
-                    ['index' => 7, 'reverse' => true],
+                    ['index' => 8, 'reverse' => false],
+                    ['index' => 9, 'reverse' => true],
+                    ['index' => 10, 'reverse' => false],
+                    ['index' => 11, 'reverse' => true],
                 ],
                 'bobot'     => 0.25,
                 'warna'     => '#ef4444',
@@ -168,7 +182,9 @@ class DiagnosisController extends Controller
                 'label'     => 'Extraversion',
                 'items'     => [
                     ['index' => 0, 'reverse' => false],
-                    ['index' => 5, 'reverse' => true],
+                    ['index' => 1, 'reverse' => true],
+                    ['index' => 2, 'reverse' => false],
+                    ['index' => 3, 'reverse' => true],
                 ],
                 'bobot'     => 0.20,
                 'warna'     => '#eab308',
@@ -178,8 +194,10 @@ class DiagnosisController extends Controller
             'agreeableness' => [
                 'label'     => 'Agreeableness',
                 'items'     => [
+                    ['index' => 4, 'reverse' => false],
+                    ['index' => 5, 'reverse' => true],
                     ['index' => 6, 'reverse' => false],
-                    ['index' => 1, 'reverse' => true],
+                    ['index' => 7, 'reverse' => true],
                 ],
                 'bobot'     => 0.15,
                 'warna'     => '#22c55e',
@@ -189,8 +207,10 @@ class DiagnosisController extends Controller
             'neuroticism' => [
                 'label'     => 'Neuroticism',
                 'items'     => [
-                    ['index' => 3, 'reverse' => false],
-                    ['index' => 8, 'reverse' => true],
+                    ['index' => 12, 'reverse' => false],
+                    ['index' => 13, 'reverse' => true],
+                    ['index' => 14, 'reverse' => false],
+                    ['index' => 15, 'reverse' => true],
                 ],
                 'bobot'     => 0.25,
                 'warna'     => '#a855f7',
