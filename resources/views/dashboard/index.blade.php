@@ -202,35 +202,62 @@
             <div class="card-header-custom" style="padding:20px 24px 15px;">Rekomendasi Untuk Anda</div>
             <div class="card-body" style="padding:0 24px 24px;">
                 
-                <div class="d-flex align-items-start gap-3 p-3 mb-2" style="background:#f0fdf4;border-radius:12px;">
-                    <div style="width:28px;height:28px;background:#16a34a;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;">
-                        <i class="bi bi-check"></i>
-                    </div>
-                    <div>
-                        <div style="font-size:0.85rem;font-weight:700;color:#1e293b;margin-bottom:2px;">Istirahat minimal 7 - 8 jam per hari</div>
-                        <div style="font-size:0.75rem;color:#475569;">Tidur cukup membantu pemulihan energi dan fokus.</div>
-                    </div>
-                </div>
+                @php
+                    $saranDashboard = [];
+                    if ($latestDiagnosis) {
+                        $aspek = is_string($latestDiagnosis->aspek_psikologi) 
+                                 ? json_decode($latestDiagnosis->aspek_psikologi, true) 
+                                 : ($latestDiagnosis->aspek_psikologi ?? []);
+                        
+                        foreach ($aspek as $key => $a) {
+                            $persen = $a['persen'] ?? 0;
+                            if ($key === 'neuroticism' && $persen >= 60) {
+                                $saranDashboard[] = ['icon' => 'bi-heart-pulse', 'color' => 'ef4444', 'bg' => 'fef2f2', 'title' => 'Kelola stres dan kecemasan', 'desc' => 'Terapkan teknik relaksasi dan jangan ragu istirahat saat kewalahan.'];
+                            }
+                            if ($key === 'conscientiousness' && $persen <= 45) {
+                                $saranDashboard[] = ['icon' => 'bi-list-check', 'color' => 'eab308', 'bg' => 'fefce8', 'title' => 'Tingkatkan manajemen waktu', 'desc' => 'Pecah tugas besar menjadi langkah-langkah kecil agar lebih ringan.'];
+                            } elseif ($key === 'conscientiousness' && $persen >= 75) {
+                                $saranDashboard[] = ['icon' => 'bi-shield-exclamation', 'color' => 'eab308', 'bg' => 'fefce8', 'title' => 'Waspada Perfeksionisme', 'desc' => 'Ingatlah untuk tidak bekerja terlalu keras sampai melupakan istirahat.'];
+                            }
+                            if ($key === 'extraversion' && $persen <= 35) {
+                                $saranDashboard[] = ['icon' => 'bi-people', 'color' => '3b82f6', 'bg' => 'eff6ff', 'title' => 'Bangun dukungan sosial', 'desc' => 'Sesekali berkolaborasi atau berdiskusi dengan teman tentang kesulitan Anda.'];
+                            } elseif ($key === 'extraversion' && $persen >= 75) {
+                                $saranDashboard[] = ['icon' => 'bi-person-dash', 'color' => '3b82f6', 'bg' => 'eff6ff', 'title' => 'Hindari Over-commit', 'desc' => 'Anda sangat aktif, pastikan fokus pada tujuan utama agar tidak kelelahan.'];
+                            }
+                            if ($key === 'agreeableness' && $persen >= 75) {
+                                $saranDashboard[] = ['icon' => 'bi-slash-circle', 'color' => '8b5cf6', 'bg' => 'f5f3ff', 'title' => 'Belajar menetapkan batasan', 'desc' => 'Beranilah berkata "tidak" agar tidak kelelahan membantu tugas orang lain.'];
+                            } elseif ($key === 'agreeableness' && $persen <= 35) {
+                                $saranDashboard[] = ['icon' => 'bi-emoji-smile', 'color' => '8b5cf6', 'bg' => 'f5f3ff', 'title' => 'Tingkatkan kerja sama tim', 'desc' => 'Lebih berempati pada teman untuk menghindari konflik yang menguras energi.'];
+                            }
+                            if ($key === 'openness' && $persen >= 75) {
+                                $saranDashboard[] = ['icon' => 'bi-focus', 'color' => '10b981', 'bg' => 'ecfdf5', 'title' => 'Fokus pada satu hal', 'desc' => 'Hindari "shiny object syndrome", fokus pada satu/dua teknologi dulu.'];
+                            }
+                        }
+                    }
+                    
+                    // Default recommendations if no extreme traits
+                    if (count($saranDashboard) == 0) {
+                        $saranDashboard = [
+                            ['icon' => 'bi-check', 'color' => '16a34a', 'bg' => 'f0fdf4', 'title' => 'Istirahat minimal 7 - 8 jam', 'desc' => 'Tidur cukup membantu pemulihan energi dan fokus.'],
+                            ['icon' => 'bi-clock', 'color' => 'eab308', 'bg' => 'fefce8', 'title' => 'Atur prioritas kegiatan', 'desc' => 'Fokus pada satu tugas dalam satu waktu untuk mengurangi multitasking.'],
+                            ['icon' => 'bi-people-fill', 'color' => 'ef4444', 'bg' => 'fef2f2', 'title' => 'Konsultasi profesional', 'desc' => 'Jika merasa kewalahan, jangan ragu mencari bantuan.']
+                        ];
+                    }
+                    
+                    $saranDashboard = array_slice($saranDashboard, 0, 3);
+                @endphp
 
-                <div class="d-flex align-items-start gap-3 p-3 mb-2" style="background:#fefce8;border-radius:12px;">
-                    <div style="width:28px;height:28px;background:#eab308;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.9rem;flex-shrink:0;">
-                        <i class="bi bi-clock"></i>
+                @foreach($saranDashboard as $idx => $saran)
+                <div class="d-flex align-items-start gap-3 p-3 mb-{{ $idx === 2 ? '3' : '2' }}" style="background:#{{ $saran['bg'] }};border-radius:12px;">
+                    <div style="width:28px;height:28px;background:#{{ $saran['color'] }};color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:{{ $idx === 0 ? '1rem' : '0.9rem' }};flex-shrink:0;">
+                        <i class="bi {{ $saran['icon'] }}"></i>
                     </div>
                     <div>
-                        <div style="font-size:0.85rem;font-weight:700;color:#1e293b;margin-bottom:2px;">Atur prioritas dan kurangi multitasking</div>
-                        <div style="font-size:0.75rem;color:#475569;">Fokus pada satu tugas dalam satu waktu</div>
+                        <div style="font-size:0.85rem;font-weight:700;color:#1e293b;margin-bottom:2px;">{{ $saran['title'] }}</div>
+                        <div style="font-size:0.75rem;color:#475569;">{{ $saran['desc'] }}</div>
                     </div>
                 </div>
-
-                <div class="d-flex align-items-start gap-3 p-3 mb-3" style="background:#fef2f2;border-radius:12px;">
-                    <div style="width:28px;height:28px;background:#ef4444;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.9rem;flex-shrink:0;">
-                        <i class="bi bi-people-fill"></i>
-                    </div>
-                    <div>
-                        <div style="font-size:0.85rem;font-weight:700;color:#1e293b;margin-bottom:2px;">Pertimbangkan konsultasi profesional</div>
-                        <div style="font-size:0.75rem;color:#475569;">Jika merasa kewalahan, jangan ragu mencari bantuan</div>
-                    </div>
-                </div>
+                @endforeach
 
                 <a href="{{ route('history.index') }}" class="btn w-100" style="background:#fff;border:1px solid #e2e8f0;color:#64748b;font-weight:600;font-size:0.85rem;border-radius:10px;padding:10px;text-decoration:none;display:inline-block;text-align:center;">
                     <i class="bi bi-card-text me-1"></i> Lihat Semua Rekomendasi

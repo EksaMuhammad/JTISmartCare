@@ -1153,23 +1153,60 @@
                     <div class="ai-rekom-content" style="color:#334155; font-size:13px; line-height:1.75;">{!! $aiRekomendasiHtml !!}</div>
                 </div>
                 @else
-                    {{-- Fallback berdasarkan hasil EDAS ($risikoLabel), bukan $total numerik --}}
-                    @if($risikoLabel === 'RISIKO TINGGI')
-                    <div class="rekom-alert tinggi">
-                        <div class="saran-label">💡 Saran Utama (Risiko Tinggi):</div>
-                        <p>Kondisi Anda menunjukkan risiko burnout yang <strong>tinggi</strong>. Segera kurangi beban aktivitas, cari dukungan konselor kampus, dan prioritaskan kesehatan mental Anda sebelum kondisi memburuk.</p>
+                    {{-- Fallback dinamis berdasarkan trait --}}
+                    @php
+                        $alertClass = $risikoLabel === 'RISIKO TINGGI' ? 'tinggi' : ($risikoLabel === 'RISIKO SEDANG' ? 'sedang' : 'rendah');
+                        $iconLabel = $risikoLabel === 'RISIKO RENDAH' ? '✅ Saran Utama (Risiko Rendah):' : '💡 Saran Utama (' . $risikoLabel . '):';
+                        $labelClass = $risikoLabel === 'RISIKO RENDAH' ? 'rendah' : '';
+                        $pClass = $risikoLabel === 'RISIKO RENDAH' ? 'rendah' : '';
+                        
+                        $saranTrait = [];
+                        foreach ($aspekPsikologi as $key => $a) {
+                            $persen = $a['persen'] ?? 0;
+                            if ($key === 'neuroticism' && $persen >= 60) {
+                                $saranTrait[] = "Kelola stres dan kecemasan Anda dengan teknik relaksasi, jangan ragu untuk beristirahat saat merasa kewalahan.";
+                            }
+                            if ($key === 'conscientiousness' && $persen <= 45) {
+                                $saranTrait[] = "Tingkatkan kedisiplinan dan manajemen waktu; pecah tugas besar menjadi langkah-langkah kecil untuk menghindari prokrastinasi.";
+                            } elseif ($key === 'conscientiousness' && $persen >= 75) {
+                                $saranTrait[] = "Sifat perfeksionis Anda bagus, tapi ingatlah untuk tidak bekerja terlalu keras (workaholic) sampai melupakan waktu istirahat.";
+                            }
+                            if ($key === 'extraversion' && $persen <= 35) {
+                                $saranTrait[] = "Cobalah untuk sesekali berkolaborasi atau sekadar berdiskusi dengan teman; dukungan sosial sangat penting saat Anda kesulitan.";
+                            } elseif ($key === 'extraversion' && $persen >= 75) {
+                                $saranTrait[] = "Anda sangat aktif secara sosial, pastikan untuk tidak mengambil terlalu banyak komitmen (over-commit) agar fokus utama tetap terjaga.";
+                            }
+                            if ($key === 'agreeableness' && $persen >= 75) {
+                                $saranTrait[] = "Belajarlah untuk berkata 'tidak' dan menetapkan batasan (boundaries) agar Anda tidak kelelahan akibat terlalu sering mengambil alih beban orang lain.";
+                            } elseif ($key === 'agreeableness' && $persen <= 35) {
+                                $saranTrait[] = "Cobalah untuk lebih berempati dan membangun kerja sama tim yang baik untuk menghindari konflik yang bisa menguras energi.";
+                            }
+                            if ($key === 'openness' && $persen >= 75) {
+                                $saranTrait[] = "Fokuslah pada satu atau dua teknologi pada satu waktu agar tidak mudah terdistraksi oleh banyak hal baru (shiny object syndrome).";
+                            }
+                        }
+
+                        $kalimatPembuka = "";
+                        if($risikoLabel === 'RISIKO TINGGI') {
+                            $kalimatPembuka = "Kondisi Anda menunjukkan risiko burnout yang <strong>tinggi</strong>. Segera cari dukungan dari orang terdekat atau konselor.";
+                        } elseif($risikoLabel === 'RISIKO SEDANG') {
+                            $kalimatPembuka = "Risiko burnout Anda berada di level <strong>sedang</strong>. Ini adalah sinyal untuk mulai memperhatikan diri sendiri.";
+                        } else {
+                            $kalimatPembuka = "Kondisi psikologis Anda <strong>baik</strong>. Pertahankan kebiasaan positif Anda.";
+                        }
+                    @endphp
+
+                    <div class="rekom-alert {{ $alertClass }}">
+                        <div class="saran-label {{ $labelClass }}">{{ $iconLabel }}</div>
+                        <p class="{{ $pClass }}">{!! $kalimatPembuka !!}</p>
+                        @if(count($saranTrait) > 0)
+                            <ul style="margin-top: 8px; padding-left: 18px; font-size: 13px; color: {{ $risikoLabel === 'RISIKO RENDAH' ? '#166534' : '#78350f' }};">
+                                @foreach($saranTrait as $saran)
+                                    <li style="margin-bottom: 4px;">{{ $saran }}</li>
+                                @endforeach
+                            </ul>
+                        @endif
                     </div>
-                    @elseif($risikoLabel === 'RISIKO SEDANG')
-                    <div class="rekom-alert sedang">
-                        <div class="saran-label">💡 Saran Utama (Risiko Sedang):</div>
-                        <p>Risiko burnout Anda berada di level <strong>sedang</strong>. Terapkan manajemen waktu yang lebih baik, istirahat yang cukup, dan hindari menumpuk tugas di last minute agar kondisi tidak semakin buruk.</p>
-                    </div>
-                    @else
-                    <div class="rekom-alert rendah">
-                        <div class="saran-label rendah">✅ Saran Utama (Risiko Rendah):</div>
-                        <p class="rendah">Kondisi psikologis Anda <strong>baik</strong>. Pertahankan kebiasaan positif, jaga keseimbangan aktivitas akademik dan istirahat, serta tetap terhubung dengan lingkungan sosial kampus.</p>
-                    </div>
-                    @endif
                 @endif
 
                 <div class="periodic-note">
@@ -1277,12 +1314,32 @@
                     @if($hasAi)
                         {!! nl2br(e($aiRekomendasi)) !!}
                     @else
+                        @php
+                            $saranPdf = [];
+                            foreach ($aspekPsikologi as $key => $a) {
+                                $persen = $a['persen'] ?? 0;
+                                if ($key === 'neuroticism' && $persen >= 60) $saranPdf[] = "Kelola stres dan kecemasan Anda dengan teknik relaksasi.";
+                                if ($key === 'conscientiousness' && $persen <= 45) $saranPdf[] = "Tingkatkan kedisiplinan dan manajemen waktu; pecah tugas besar menjadi langkah kecil.";
+                                elseif ($key === 'conscientiousness' && $persen >= 75) $saranPdf[] = "Sifat perfeksionis bagus, tapi jangan sampai bekerja terlalu keras tanpa istirahat.";
+                                if ($key === 'extraversion' && $persen <= 35) $saranPdf[] = "Coba berkolaborasi dan minta dukungan sosial saat Anda kesulitan.";
+                                elseif ($key === 'extraversion' && $persen >= 75) $saranPdf[] = "Hindari mengambil terlalu banyak komitmen sosial agar fokus utama terjaga.";
+                                if ($key === 'agreeableness' && $persen >= 75) $saranPdf[] = "Belajarlah menetapkan batasan agar tidak kelelahan menanggung beban orang lain.";
+                                elseif ($key === 'agreeableness' && $persen <= 35) $saranPdf[] = "Lebih berempati dan bangun kerja sama tim yang baik untuk menghindari konflik.";
+                                if ($key === 'openness' && $persen >= 75) $saranPdf[] = "Fokus pada satu/dua teknologi pada satu waktu agar tidak mudah terdistraksi.";
+                            }
+                        @endphp
                         @if($total >= 70)
-                            Kondisi Anda menunjukkan tingkat burnout yang tinggi. Disarankan untuk segera melakukan penyesuaian pola aktivitas dan mencari dukungan profesional agar kondisi tidak semakin memburuk.
+                            Kondisi Anda menunjukkan tingkat burnout yang tinggi. Segera cari dukungan profesional/konselor.
                         @elseif($total >= 40)
-                            Tingkat burnout Anda berada di level sedang. Perlu manajemen waktu yang lebih baik dan istirahat yang cukup untuk mencegah kondisi memburuk.
+                            Risiko burnout Anda berada di level sedang. Mulailah memperhatikan diri sendiri.
                         @else
-                            Kondisi Anda masih baik. Tetap jaga keseimbangan aktivitas dan istirahat yang cukup untuk mempertahankan kondisi ini.
+                            Kondisi psikologis Anda baik. Pertahankan kebiasaan positif Anda.
+                        @endif
+                        @if(count($saranPdf) > 0)
+                            <br><br><strong>Fokus Perbaikan:</strong><br>
+                            @foreach($saranPdf as $s)
+                                - {{ $s }}<br>
+                            @endforeach
                         @endif
                     @endif
                 </div>
