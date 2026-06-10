@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Diagnosis;
 use App\Models\User;
+use App\Models\DiagnosisSession;
 
 class DashboardController extends Controller
 {

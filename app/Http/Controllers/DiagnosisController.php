@@ -27,6 +27,19 @@ class DiagnosisController extends Controller
     // ============================================================
     public function proses(Request $request)
     {
+            // Jika belum login
+        if (!auth()->check()) {
+
+            // simpan jawaban sementara
+            session([
+                'guest_jawaban' => $request->jawaban,
+                'after_login_redirect' => 'diagnosis.resume'
+            ]);
+
+            return redirect()->route('login')
+                ->with('warning', 'Silakan login atau daftar terlebih dahulu untuk melihat hasil diagnosis.');
+        }
+
         $request->validate([
             'jawaban'   => ['required', 'array', 'size:20'],
             'jawaban.*' => ['required', 'integer', 'between:1,5'],
@@ -134,6 +147,57 @@ class DiagnosisController extends Controller
             'waktu'          => $session->created_at,
             'aiRekomendasi'  => $session->rekomendasi_ai,
         ]);
+    }
+
+    public function resume()
+    {
+        if (!auth()->check()) {
+            return redirect()->route('login');
+        }
+
+        $jawaban = session('guest_jawaban');
+
+        if (!$jawaban) {
+            return redirect()->route('diagnosis.form');
+        }
+
+        $jawaban = array_map('intval', $jawaban);
+
+        $hasil = $this->hitungEdasOcean($jawaban);
+
+        $aiRekomendasi = \App\Helpers\GeminiAIHelper::getRecommendation([
+            'total_skor' => $hasil['risk_index'],
+            'jawaban' => $jawaban,
+            'aspek_psikologi' => $hasil['aspek'],
+            'kategori_risiko' => $hasil['kategori'],
+            'edas' => $hasil['edas'],
+        ]);
+
+        $session = \App\Models\DiagnosisSession::create([
+            'user_id' => auth()->id(),
+            'jawaban' => $jawaban,
+            'aspek_psikologi' => $hasil['aspek'],
+            'edas_result' => $hasil['edas'],
+            'risk_index' => $hasil['risk_index'],
+            'total_skor' => $hasil['risk_index'],
+            'kategori_risiko' => $hasil['kategori'],
+            'rekomendasi_ai' => $aiRekomendasi,
+        ]);
+
+        session([
+            'diagnosis_id' => $session->id,
+            'total_skor' => $hasil['risk_index'],
+            'jawaban' => $jawaban,
+            'aspek_psikologi' => $hasil['aspek'],
+            'kategori_risiko' => $hasil['kategori'],
+            'edas' => $hasil['edas'],
+            'aiRekomendasi' => $aiRekomendasi,
+            'waktu' => now(),
+        ]);
+
+        session()->forget('guest_jawaban');
+
+        return redirect()->route('diagnosis.hasil');
     }
 
     public function rekomendasi($id)

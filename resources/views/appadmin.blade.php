@@ -307,16 +307,6 @@
         </a>
     </div>
 
-    {{-- KNOWLEDGE BASE --}}
-    <div class="nav-item">
-        <a href="{{ route('admin.knowledge.index') }}"
-           class="{{ request()->routeIs('admin.knowledge.index') ? 'active' : '' }}">
-
-            <i class="bi bi-database"></i>
-            Knowledge Base
-        </a>
-    </div>
-
     {{-- ARTIKEL --}}
     <div class="nav-item">
         <a href="{{ route('admin.articles') }}"
