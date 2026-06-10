@@ -219,7 +219,7 @@
 {{-- SIDEBAR --}}
 <nav class="sidebar" id="sidebar">
      <div class="sidebar-brand">
-        <img src="{{ asset('assets/images/Logo.png') }}" alt="JTI SmartCare">
+        <img src="{{ asset('assets/images/logo.png') }}" alt="JTI SmartCare">
         <div class="brand-text">
             <span class="brand-jti">JTI </span><span class="brand-smart">Smart</span><span class="brand-care">Care</span>
         </div>
