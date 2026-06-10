@@ -216,7 +216,7 @@
     <div class="right-side">
         
         <div class="text-center">
-            <img src="{{ asset('assets/images/Logo.png') }}" alt="Logo JTISmartCare" class="logo-img">
+            <img src="{{ asset('assets/images/logo.png') }}" alt="Logo JTISmartCare" class="logo-img">
             <h2 class="auth-title">Buat Akun Baru</h2>
         </div>
         
