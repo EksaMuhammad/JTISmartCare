@@ -27,7 +27,7 @@ class MonitoringController extends Controller
                 $query->where('kategori_risiko', 'RISIKO RENDAH');
             } elseif ($tingkat === 'Sedang') {
                 $query->where('kategori_risiko', 'RISIKO SEDANG');
-            } elseif ($tingkat === 'Berat') {
+            } elseif ($tingkat === 'Tinggi') {
                 $query->where('kategori_risiko', 'RISIKO TINGGI');
             }
         }

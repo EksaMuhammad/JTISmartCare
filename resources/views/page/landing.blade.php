@@ -14,7 +14,7 @@
                         rekomendasi personal guna meningkatkan kesehatan mental mahasiswa.
                     </p>
                     <div class="hero-buttons">
-                        <a href="{{ route('register') }}" class="btn-primary">Daftar Sekarang</a>
+                        <a href="{{ route('kuesioner.dummy') }}" class="btn-primary">Mulai Tes</a>
                         <a href="#about" class="btn-outline">Pelajari Lebih Lanjut</a>
                     </div>
                 </div>

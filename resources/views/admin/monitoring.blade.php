@@ -63,9 +63,9 @@
                                 Sedang
                             </option>
 
-                            <option value="Berat"
-                                {{ request('tingkat') == 'Berat' ? 'selected' : '' }}>
-                                Berat
+                            <option value="Tinggi"
+                                {{ request('tingkat') == 'Tinggi' ? 'selected' : '' }}>
+                                Tinggi
                             </option>
 
                         </select>

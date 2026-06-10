@@ -23,7 +23,18 @@
         }
         .left-side {
             flex: 1;
-            background: linear-gradient(135deg, rgba(79, 70, 229, 0.8), rgba(6, 182, 212, 0.8)), url('https://images.unsplash.com/photo-1516321318423-f06f85e504b3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1080&q=80') center/cover;
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(79, 70, 229, 0.5),
+                    rgba(6, 182, 212, 0.5)
+                ),
+                url('{{ asset("assets/images/login-bg.png") }}');
+                
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+
             display: flex;
             flex-direction: column;
             justify-content: flex-end;
@@ -44,11 +55,11 @@
             margin-bottom: 10px;
             text-shadow: 0 4px 20px rgba(0,0,0,0.3);
         }
-        .brand-title .text-teal { color: #2dd4bf; }
-        .brand-title .text-white-light { color: #f8fafc; }
+        .brand-title .text-teal { color: #28B5B5; }
+        .brand-title .text-white-light { color: #9CD5FF; }
         .brand-subtitle {
             font-size: 1.1rem;
-            color: #e2e8f0;
+            color: #9CD5FF;
             max-width: 550px;
             line-height: 1.5;
             margin: 0 auto;
@@ -217,13 +228,15 @@
             <label class="input-group-label">Email</label>
             <div class="input-group-custom">
                 <input type="email" name="email" class="form-control @error('email') is-invalid @enderror"
-                    value="{{ old('email') }}" required autofocus>
+                    value="{{ old('email') }}"
+                    placeholder="Contoh: ismixx@student.polinema.ac.id"
+                    required autofocus>
                 <i class="bi bi-envelope icon-left"></i>
             </div>
             
             <label class="input-group-label">Password</label>
             <div class="input-group-custom">
-                <input type="password" name="password" id="password" class="form-control" required>
+                <input type="password" name="password" id="password" class="form-control" placeholder="Masukkan password akun Anda" required>
                 <i class="bi bi-lock icon-left"></i>
                 <i class="bi bi-eye icon-right" id="togglePassword"></i>
             </div>

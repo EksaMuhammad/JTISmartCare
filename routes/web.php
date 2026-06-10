@@ -32,8 +32,13 @@ Route::middleware('guest')->group(function () {
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 
+Route::get('/kuesioner-dummy', function () {
+    return view('user.isi_kuesioner_dummy');
+})->name('kuesioner.dummy');
+
 // ===== AREA USER =====
 Route::middleware(['auth'])->group(function () {
+    
 
     // Dashboard
     Route::get('/dashboard-first', function () {
@@ -43,6 +48,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/admin/dashboard', [DashboardController::class, 'admin'])
         ->name('admin.dashboard');
+
 // Diagnosis
 Route::prefix('diagnosis')->name('diagnosis.')->group(function () {
     Route::get('/form', [DiagnosisController::class, 'form'])->name('form');
