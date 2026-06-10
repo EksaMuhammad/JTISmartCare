@@ -18,7 +18,6 @@ Route::get('/landing-page', function (){
     return view('page.landing');
 })-> name('landing');
 
-Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 
 // ===== AUTENTIKASI =====
 Route::middleware('guest')->group(function () {
