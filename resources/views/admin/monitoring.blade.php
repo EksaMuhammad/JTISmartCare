@@ -13,10 +13,14 @@
             </p>
         </div>
 
-        <button class="btn text-white px-4 py-2 shadow-sm"
-            style="background: #5B5FEF; border-radius: 12px;">
-            <i class="bi bi-download me-2"></i> Unduh Laporan
-        </button>
+       <a href="{{ route('admin.monitoring.export.pdf') }}"
+   class="btn text-white px-4 py-2 shadow-sm"
+   style="background:#5B5FEF;border-radius:12px;">
+
+    <i class="bi bi-download me-2"></i>
+    Unduh Laporan
+
+</a>
     </div>
 
     <!-- Filter Card -->
