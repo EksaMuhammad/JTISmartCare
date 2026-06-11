@@ -82,6 +82,9 @@ Route::delete('/history/{id}', [HistoryController::class, 'destroy'])->name('his
         
         Route::get('/monitoring', [MonitoringController::class, 'index'])
             ->name('monitoring');
+
+        Route::get('/monitoring/export-pdf', [MonitoringController::class, 'exportPdf'])
+    ->name('monitoring.export.pdf');
         
         // ===== ADMIN KNOWLEDGE BASE =====
         Route::get('/knowledge', [KnowledgeController::class, 'index'])->name('knowledge.index');
