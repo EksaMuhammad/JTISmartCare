@@ -94,5 +94,41 @@ Route::delete('/history/{id}', [HistoryController::class, 'destroy'])->name('his
         Route::post('/knowledge/{id}/update', [KnowledgeController::class, 'update'])->name('knowledge.update');
         Route::delete('/knowledge/{id}/delete', [KnowledgeController::class, 'destroy'])->name('knowledge.destroy');
     });
+    public function exportPdf(Request $request)
+{
+    $query = DiagnosisSession::with('user');
+
+    if ($request->filled('search')) {
+        $search = $request->input('search');
+
+        $query->whereHas('user', function ($q) use ($search) {
+            $q->where('name', 'like', "%{$search}%")
+              ->orWhere('nim', 'like', "%{$search}%");
+        });
+    }
+
+    if ($request->filled('tingkat')) {
+        $tingkat = $request->input('tingkat');
+
+        if ($tingkat === 'Ringan') {
+            $query->where('kategori_risiko', 'RISIKO RENDAH');
+        } elseif ($tingkat === 'Sedang') {
+            $query->where('kategori_risiko', 'RISIKO SEDANG');
+        } elseif ($tingkat === 'Tinggi') {
+            $query->where('kategori_risiko', 'RISIKO TINGGI');
+        }
+    }
+
+    $data = $query->latest()->get();
+
+    $pdf = Pdf::loadView(
+        'admin.monitoring_pdf',
+        compact('data')
+    )->setPaper('a4', 'landscape');
+
+    return $pdf->download(
+        'laporan-monitoring-burnout.pdf'
+    );
+}
     
 });
