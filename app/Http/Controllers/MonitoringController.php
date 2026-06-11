@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Diagnosis;
+use Barryvdh\DomPDF\Facade\Pdf;
+use App\Models\DiagnosisSession;
 
 class MonitoringController extends Controller
 {
@@ -45,6 +47,30 @@ class MonitoringController extends Controller
                     // Ignore date parsing error
                 }
             }
+            public function exportPdf(Request $request)
+{
+    $query = DiagnosisSession::with('user');
+
+    if ($request->filled('search')) {
+        $search = $request->search;
+
+        $query->whereHas('user', function ($q) use ($search) {
+            $q->where('name', 'like', "%{$search}%")
+              ->orWhere('nim', 'like', "%{$search}%");
+        });
+    }
+
+    $data = $query->latest()->get();
+
+    $pdf = Pdf::loadView(
+        'admin.monitoring_pdf',
+        compact('data')
+    );
+
+    return $pdf->download(
+        'laporan-monitoring.pdf'
+    );
+}
         }
 
         $data = $query->latest()->get();
