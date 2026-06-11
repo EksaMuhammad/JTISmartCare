@@ -8,6 +8,8 @@ use App\Http\Controllers\HistoryController;
 use App\Http\Controllers\KnowledgeController;
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\MonitoringController;
+use Barryvdh\DomPDF\Facade\Pdf;
+use App\Models\DiagnosisSession;
 
 Route::get('/', function () {
     return redirect()->route('landing');
